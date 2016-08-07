@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+           <item android:id="@+id/oneLeft"
+          android:icon="@drawable/one"
+          android:title="@string/one"/>
+    <item android:id="@+id/twoLeft"
+          android:icon="@drawable/two"
+          android:title="@string/two" />
+        <item android:id="@+id/threeLeft"
+          android:icon="@drawable/three"
+          android:title="@string/three" />
+            <item android:id="@+id/fourLeft"
+          android:icon="@drawable/four"
+          android:title="@string/four" />
+                <item android:id="@+id/zeroLeft"
+          android:icon="@drawable/zero"
+          android:title="@string/zero" />
+    </group>
+        <group android:checkableBehavior="single">
+           <item android:id="@+id/oneRight"
+          android:icon="@drawable/one"
+          android:title="@string/one"/>
+    <item android:id="@+id/twoRight"
+          android:icon="@drawable/two"
+          android:title="@string/two" />
+        <item android:id="@+id/threeRight"
+          android:icon="@drawable/three"
+          android:title="@string/three" />
+            <item android:id="@+id/fourRight"
+          android:icon="@drawable/four"
+          android:title="@string/four" />
+                <item android:id="@+id/zeroRight"
+          android:icon="@drawable/zero"
+          android:title="@string/zero" />
+    </group>
+</menu>
