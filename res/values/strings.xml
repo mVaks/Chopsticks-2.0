@@ -14,7 +14,6 @@
     <string name="zero">zero</string>
     <string name="yourturn">Your Turn</string>
     <string name="restart">Restart</string>
-        <string name="app_id">791886507953</string>
                               
 <string name="game_title">Chopsticks Online!</string>
     <string name="game_blurb">A remake of the classic game of chopsticks!\nPlay online, offline, or single player!\n Can you beat your friends?\nOnly one way to find out!\nTo play online you must sign in with Google.</string>
@@ -56,4 +55,15 @@
        <string name="gcm_recoverable_error">From GCM: recoverable error (%1$s).</string>
     <string name="gcm_deleted">From GCM: server deleted %1$d pending messages!</string>
 	  <string name="error_config">Please set the %1$s constant and recompile the app.</string>	
+	  
+    <string name="match_instructions">Type in a new word for the data in this game, then hit done.</string>
+    <string name="quick_match">Quick match</string>
+    <string name="done">Done</string>
+    <string name="leave">Leave</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
+    <string name="welcome_to_our_skeleton_app_">Welcome to our skeleton app!</string>
+    <string name="check_games">Check games</string>
+    <string name="start_match">Start Match</string>
+    <string name="turn_counter">Turn counter</string>
 </resources>

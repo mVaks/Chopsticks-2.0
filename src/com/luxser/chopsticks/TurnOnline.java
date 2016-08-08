@@ -52,6 +52,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener{
 	   final static int RC_WAITING_ROOM = 10002;
 	   private static final int RC_SIGN_IN = 9001;
 	   public boolean signInClicked;
+	   
 
 	   final static int[] CLICKABLES = {
            R.id.button_accept_popup_invitation, R.id.button_invite_players,
@@ -328,7 +329,7 @@ RoomStatusUpdateListener, RoomUpdateListener, OnInvitationReceivedListener{
 	       }
 	// Start the gameplay phase of the game.
 	   void startGame(boolean multiplayer) {
-	       mMultiplayer = multiplayer;
+	       mMultiplayer = true;
 	       //updateScoreDisplay();
 	       //broadcastScore(false);
 	       switchToScreen(R.id.screen_game);
