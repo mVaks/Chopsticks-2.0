@@ -401,10 +401,6 @@ public class OnlineActivity extends Activity
             findViewById(R.id.screen_game).setVisibility(View.VISIBLE);
             
         }
-        else if((findViewById(R.id.screen_game).getVisibility()==View.VISIBLE) && mMatch == null){
-        	findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
-            findViewById(R.id.screen_game).setVisibility(View.GONE);
-        }
         else if((findViewById(R.id.screen_game).getVisibility()==View.VISIBLE)){
         	
         }
@@ -823,10 +819,13 @@ public class OnlineActivity extends Activity
         if (!checkStatusCode(match, result.getStatus().getStatusCode())) {
             return;
         }
-        if(match==null)
+        if(match==null){
         	isDoingTurn = false;
+        }
         else
         isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
+        findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+        findViewById(R.id.screen_game).setVisibility(View.GONE);
         showWarning("Left", "You've left this match.");
     }
 
