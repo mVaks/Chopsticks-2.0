@@ -14,6 +14,7 @@
     <string name="zero">zero</string>
     <string name="yourturn">Your Turn</string>
     <string name="restart">Restart</string>
+    <string name="returnTo">Return to Main Menu</string>
                               
 <string name="game_title">Chopsticks Online!</string>
     <string name="game_blurb">A remake of the classic game of chopsticks!\nPlay online, offline, or single player!\n Can you beat your friends?\nOnly one way to find out!\nTo play online you must sign in with Google.</string>

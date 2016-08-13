@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.luxser.chopsticks"
-    android:versionCode="16"
+    package="com.luxser.chopsticksOnline"
+    android:versionCode="35"
     android:screenOrientation="portrait"
-    android:versionName="1.15" >
+    android:versionName="1.0.34" >
 
     <uses-sdk
         android:screenOrientation="portrait"
@@ -22,9 +22,7 @@
             android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-        <meta-data
-      android:name="com.google.android.gms.games.appstate.APP_ID"
-      android:value="@string/app_id" />
+  
         <activity
             android:screenOrientation="portrait"
             android:name=".SinglePlayerActivity"
