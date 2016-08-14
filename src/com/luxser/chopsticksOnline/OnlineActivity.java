@@ -13,11 +13,11 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.DragShadowBuilder;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,8 +36,8 @@ import com.google.android.gms.games.multiplayer.turnbased.OnTurnBasedMatchUpdate
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
+import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer.LoadMatchResult;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.luxser.chopsticksOnline.TurnOnline.MyDragListener;
 
 
 /**
@@ -66,7 +66,7 @@ public class OnlineActivity extends Activity
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
-
+    public boolean justWent = false;
     // Are we currently resolving a connection failure?
     private boolean mResolvingConnectionFailure = false;
 
@@ -333,7 +333,7 @@ public class OnlineActivity extends Activity
     }
 
     // Finish the game. Sometimes, this is your only choice.
-    public void onFinishClicked(View view) {
+    public void onFinish() {
         showSpinner();
         Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId())
                 .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
@@ -395,16 +395,16 @@ public class OnlineActivity extends Activity
         ((TextView) findViewById(R.id.name_field)).setText(Games.Players.getCurrentPlayer(
                 mGoogleApiClient).getDisplayName());
         findViewById(R.id.screen_sign_in).setVisibility(View.GONE);
-        
-        if (isDoingTurn) {
+        if(justWent){
+        	
+        }
+        else if (isDoingTurn) {
             findViewById(R.id.screen_main).setVisibility(View.GONE);
             findViewById(R.id.screen_game).setVisibility(View.VISIBLE);
             
         }
-        else if((findViewById(R.id.screen_game).getVisibility()==View.VISIBLE)){
+        else{
         	
-        }
-        else {
         	
             findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
             findViewById(R.id.screen_game).setVisibility(View.GONE);
@@ -418,11 +418,18 @@ public class OnlineActivity extends Activity
     	}
     }
     public void setGameplayUI() {
+    	dismissSpinner();
+    	justWent = false;
         isDoingTurn = true;
+        assignVars();
         setViewVisibility();
-        
+        Log.d(TAG, "bottomLeft:  " + mTurnData.bottomLeft);
+        Log.d(TAG, "bottomRight:  " + mTurnData.bottomRight);
+        Log.d(TAG, "topLeft:  " + mTurnData.topLeft);
+        Log.d(TAG, "topRight:  " + mTurnData.topRight);
+
         viewsGone();
-        switch(Integer.parseInt(mTurnData.bottomLeft)){
+        switch(mTurnData.bottomLeft){
         	case 0: zeroTopLeft.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneTopLeft.setVisibility(View.VISIBLE);
@@ -434,7 +441,7 @@ public class OnlineActivity extends Activity
         	case 4: fourTopLeft.setVisibility(View.VISIBLE);
         		break;
         }
-        switch(Integer.parseInt(mTurnData.bottomRight)){
+        switch(mTurnData.bottomRight){
         	case 0: zeroTopRight.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneTopRight.setVisibility(View.VISIBLE);
@@ -446,7 +453,7 @@ public class OnlineActivity extends Activity
         	case 4: fourTopRight.setVisibility(View.VISIBLE);
         		break;
         }
-        switch(Integer.parseInt(mTurnData.topLeft)){
+        switch(mTurnData.topLeft){
         	case 0: zeroBottomLeft.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneBottomLeft.setVisibility(View.VISIBLE);
@@ -458,7 +465,7 @@ public class OnlineActivity extends Activity
         	case 4: fourBottomLeft.setVisibility(View.VISIBLE);
         		break;
         }
-        switch(Integer.parseInt(mTurnData.topRight)){
+        switch(mTurnData.topRight){
         	case 0: zeroBottomRight.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneBottomRight.setVisibility(View.VISIBLE);
@@ -471,22 +478,7 @@ public class OnlineActivity extends Activity
         		break;
         }
 
-        final Handler handler = new Handler();
-        final Runnable refresher = new Runnable() {
-       	  public void run() {
-       	    findInvisible();
-       	    if(ifBottomWon()){
-       	    	bottomYT.setText("You Won");
-		        	topYT.setText("You Lost");
-       	    }
-       	    if(ifTopWon()){
-       	    	bottomYT.setText("You Lost");
-		        	topYT.setText("You Won");
-       	    }
-       	    	
-       	  }
-       	};
-       	handler.postDelayed(refresher, 100);
+       
         //mDataView.setText(mTurnData.data);
         //mTurnTextView.setText("Turn " + mTurnData.turnCounter);
     }
@@ -629,12 +621,13 @@ public class OnlineActivity extends Activity
     // callback to OnTurnBasedMatchUpdated(), which will show the game
     // UI.
     public void startMatch(TurnBasedMatch match) {
+    	justWent = false;
         mTurnData = new SkeletonTurn();
         // Some basic turn data
-        mTurnData.topLeft = "1";
-        mTurnData.topRight = "1";
-        mTurnData.bottomLeft = "1";
-        mTurnData.bottomRight = "1";
+        mTurnData.topLeft = 1;
+        mTurnData.topRight = 1;
+        mTurnData.bottomLeft = 1;
+        mTurnData.bottomRight = 1;
 
         mMatch = match;
 
@@ -642,7 +635,7 @@ public class OnlineActivity extends Activity
         String myParticipantId = mMatch.getParticipantId(playerId);
 
         showSpinner();
-
+        
         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, match.getMatchId(),
                 mTurnData.persist(), myParticipantId).setResultCallback(
                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
@@ -657,26 +650,7 @@ public class OnlineActivity extends Activity
      	
    	
     }
-    private Runnable runnable = new Runnable() {
-		   @Override
-		   public void run() {
-			   if(!isMoving)
-			   findInvisible();
-   	    if(ifBottomWon()){
-   	    	bottomYT.setText("You Won");
-		        	topYT.setText("You Lost");
-   	    }
-   	    if(ifTopWon()){
-   	    	bottomYT.setText("You Lost");
-		        	topYT.setText("You Won");
-   	    }
-   	  
- 
 
-		      handler.postDelayed(this, 1000);          // reschedule the handler
-		   }
-		};
-		
 		
     // If you choose to rematch, then call it and wait for a response.
     public void rematch() {
@@ -819,13 +793,9 @@ public class OnlineActivity extends Activity
         if (!checkStatusCode(match, result.getStatus().getStatusCode())) {
             return;
         }
-        if(match==null){
-        	isDoingTurn = false;
-        }
-        else
+        
         isDoingTurn = (match.getTurnStatus() == TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN);
-        findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
-        findViewById(R.id.screen_game).setVisibility(View.GONE);
+        justWent = false;
         showWarning("Left", "You've left this match.");
     }
 
@@ -849,6 +819,7 @@ public class OnlineActivity extends Activity
 
         setViewVisibility();
     }
+    
     String mIncomingInvitationId = null;
     // Handle notification events.
     @Override
@@ -879,11 +850,16 @@ public class OnlineActivity extends Activity
     	 mIncomingInvitationId = null;
         Toast.makeText(this, "An invitation was removed.", Toast.LENGTH_SHORT).show();
     }
-
+    public TurnBasedMatch cMatch = null;
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
         Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
+        if(cMatch == match){
+        	updateMatch(match);
+        }
+        
     }
+    
 
     @Override
     public void onTurnBasedMatchRemoved(String matchId) {
@@ -1017,7 +993,14 @@ public class OnlineActivity extends Activity
                 Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(cb);
             	break;
             case R.id.button1:
-            	onBackPressed();
+            	if(isDoingTurn){
+            	showWarning("Exit Attempt", "You must finish turn to return to main menu.");
+            	}
+            	else{
+            		justWent = false;
+            		findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+                    findViewById(R.id.screen_game).setVisibility(View.GONE); 
+            	}
             	break;
             	
              }
@@ -1025,33 +1008,7 @@ public class OnlineActivity extends Activity
              
     }
     public void onBackPressed(){
-    	if(isDoingTurn){
-        showSpinner();
-        String nextParticipantId = getNextParticipantId();
-
-        Games.TurnBasedMultiplayer.leaveMatchDuringTurn(mGoogleApiClient, mMatch.getMatchId(),
-                nextParticipantId).setResultCallback(
-                    new ResultCallback<TurnBasedMultiplayer.LeaveMatchResult>() {
-            @Override
-            public void onResult(TurnBasedMultiplayer.LeaveMatchResult result) {
-                processResult(result);
-            }
-        });
-        setViewVisibility();
-        dismissSpinner();
-    	}
-    	else{
-            showSpinner();
-    		Games.TurnBasedMultiplayer.leaveMatch(mGoogleApiClient, mMatch.getMatchId()).setResultCallback(
-                    new ResultCallback<TurnBasedMultiplayer.LeaveMatchResult>() {
-            @Override
-            public void onResult(TurnBasedMultiplayer.LeaveMatchResult result) {
-                processResult(result);
-            }
-        });
-    		setViewVisibility();
-            dismissSpinner();
-    	}
+    	
 	 }
     private final class MyTouchListener implements OnTouchListener {
 	    public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1781,7 +1738,6 @@ public class OnlineActivity extends Activity
 			return false;
 	     	
 	    }
-	    public boolean turnWent;
 	    class MyDragListener implements OnDragListener {
 		    //Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		   // Drawable normalShape = getResources().getDrawable(R.drawable.shape);
@@ -1791,8 +1747,7 @@ public class OnlineActivity extends Activity
 		      int action = event.getAction();
 		      switch (event.getAction()) {
 		      case DragEvent.ACTION_DRAG_STARTED:
-		    	  if(turnWent)
-		    		  return false;
+		    	 
 		        // do nothing
 		        break;
 		      case DragEvent.ACTION_DRAG_ENTERED:
@@ -2309,18 +2264,28 @@ public class OnlineActivity extends Activity
 	    	 for(ImageView views:hands){
 	        		views.setOnTouchListener(null);
 	    	 }
-	    	 turnWent = true;
+	    	 justWent = true;
+	    	 cMatch = mMatch;
 	    	 showSpinner();
 
 	         String nextParticipantId = getNextParticipantId();
 	         // Create the next turn
 	         mTurnData.turnCounter += 1;
 	         //mTurnData.data = mDataView.getText().toString();
-	         
+	        
+	         Log.d(TAG, "bottomLeft:  " + mTurnData.bottomLeft);
+	         Log.d(TAG, "bottomRight:  " + mTurnData.bottomRight);
+	         Log.d(TAG, "topLeft:  " + mTurnData.topLeft);
+	         Log.d(TAG, "topRight:  " + mTurnData.topRight);
+
 	         updatePositions();
-	        		
+	         Log.d(TAG, "bottomLeft:  " + mTurnData.bottomLeft);
+	         Log.d(TAG, "bottomRight:  " + mTurnData.bottomRight);
+	         Log.d(TAG, "topLeft:  " + mTurnData.topLeft);
+	         Log.d(TAG, "topRight:  " + mTurnData.topRight);
+	
 	         showSpinner();
-               
+             
 	         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, mMatch.getMatchId(),
 	                 mTurnData.persist(), nextParticipantId).setResultCallback(
 	                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
@@ -2329,72 +2294,73 @@ public class OnlineActivity extends Activity
 	                 processResult(result);
 	             }
 	         });
-	         turnWent = false;
+	         bottomYT.setText("Please Wait");
+	         showSpinner();
 	         mTurnData = null;
 	    }
 	    public void updatePositions(){
 	    	 if(zeroTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = "0";
+	        	 mTurnData.topRight = 0;
 	         }
 	         else if(oneTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = "1";
+	        	 mTurnData.topRight = 1;
 	         }	
 	         else if(twoTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = "2";
+	        	 mTurnData.topRight = 2;
 	         }
 	         else if(threeTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = "3";
+	        	 mTurnData.topRight = 3;
 	         }
 	         else if(fourTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = "4";
+	        	 mTurnData.topRight = 4;
 	         }
 	         
 	         if(zeroTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = "0";
+	        	 mTurnData.topLeft = 0;
 	         }
 	         else if(oneTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = "1";
+	        	 mTurnData.topLeft = 1;
 	         }	
 	         else if(twoTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = "2";
+	        	 mTurnData.topLeft = 2;
 	         }
 	         else if(threeTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = "3";
+	        	 mTurnData.topLeft = 3;
 	         }
 	         else if(fourTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = "4";
+	        	 mTurnData.topLeft = 4;
 	         }
 	         
 	         if(zeroBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = "0";
+	        	 mTurnData.bottomRight = 0;
 	         }
 	         else if(oneBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = "1";
+	        	 mTurnData.bottomRight = 1;
 	         }	
 	         else if(twoBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = "2";
+	        	 mTurnData.bottomRight = 2;
 	         }
 	         else if(threeBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = "3";
+	        	 mTurnData.bottomRight = 3;
 	         }
 	         else if(fourBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = "4";
+	        	 mTurnData.bottomRight = 4;
 	         }
 	         
 	         if(zeroBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = "0";
+	        	 mTurnData.bottomLeft = 0;
 	         }
 	         else if(oneBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = "1";
+	        	 mTurnData.bottomLeft = 1;
 	         }	
 	         else if(twoBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = "2";
+	        	 mTurnData.bottomLeft = 2;
 	         }
 	         else if(threeBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = "3";
+	        	 mTurnData.bottomLeft = 3;
 	         }
 	         else if(fourBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = "4";
+	        	 mTurnData.bottomLeft = 4;
 	         }
 	    }
    public void assignVars(){

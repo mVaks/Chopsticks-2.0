@@ -18,10 +18,10 @@ public class SkeletonTurn {
 
     public static final String TAG = "EBTurn";
 
-    public String topLeft = "";
-    public String topRight = "";
-    public String bottomLeft = "";
-    public String bottomRight = "";
+    public int topLeft;
+    public int topRight;
+    public int bottomLeft;
+    public int bottomRight;
     public int turnCounter;
 
     public SkeletonTurn() {
@@ -71,16 +71,16 @@ public class SkeletonTurn {
             JSONObject obj = new JSONObject(st);
 
             if (obj.has("topLeft")) {
-                retVal.topLeft = obj.getString("topLeft");
+                retVal.topLeft = obj.getInt("topLeft");
             }
             if (obj.has("topRight")) {
-                retVal.topRight = obj.getString("topRight");
+                retVal.topRight = obj.getInt("topRight");
             }
             if (obj.has("bottomLeft")) {
-                retVal.bottomLeft = obj.getString("bottomLeft");
+                retVal.bottomLeft = obj.getInt("bottomLeft");
             }
             if (obj.has("bottomRight")) {
-                retVal.bottomRight = obj.getString("bottomRight");
+                retVal.bottomRight = obj.getInt("bottomRight");
             }
             if (obj.has("turnCounter")) {
                 retVal.turnCounter = obj.getInt("turnCounter");
