@@ -185,7 +185,7 @@ public class OnlineActivity extends Activity
 
     @Override
     protected void onStop() {
-    	
+    	stopKeepingScreenOn();
         super.onStop();
         Log.d(TAG, "onStop(): Disconnecting from Google APIs");
         if (mGoogleApiClient.isConnected()) {
@@ -423,13 +423,14 @@ public class OnlineActivity extends Activity
         isDoingTurn = true;
         assignVars();
         setViewVisibility();
+        bottomYT.setText("Your Turn");
         Log.d(TAG, "bottomLeft:  " + mTurnData.bottomLeft);
         Log.d(TAG, "bottomRight:  " + mTurnData.bottomRight);
         Log.d(TAG, "topLeft:  " + mTurnData.topLeft);
         Log.d(TAG, "topRight:  " + mTurnData.topRight);
-
+       
         viewsGone();
-        switch(mTurnData.bottomLeft){
+        switch(mTurnData.topLeft){
         	case 0: zeroTopLeft.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneTopLeft.setVisibility(View.VISIBLE);
@@ -441,7 +442,7 @@ public class OnlineActivity extends Activity
         	case 4: fourTopLeft.setVisibility(View.VISIBLE);
         		break;
         }
-        switch(mTurnData.bottomRight){
+        switch(mTurnData.topRight){
         	case 0: zeroTopRight.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneTopRight.setVisibility(View.VISIBLE);
@@ -453,7 +454,7 @@ public class OnlineActivity extends Activity
         	case 4: fourTopRight.setVisibility(View.VISIBLE);
         		break;
         }
-        switch(mTurnData.topLeft){
+        switch(mTurnData.bottomLeft){
         	case 0: zeroBottomLeft.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneBottomLeft.setVisibility(View.VISIBLE);
@@ -465,7 +466,7 @@ public class OnlineActivity extends Activity
         	case 4: fourBottomLeft.setVisibility(View.VISIBLE);
         		break;
         }
-        switch(mTurnData.topRight){
+        switch(mTurnData.bottomRight){
         	case 0: zeroBottomRight.setVisibility(View.VISIBLE);
         		break;
         	case 1:	oneBottomRight.setVisibility(View.VISIBLE);
@@ -593,15 +594,15 @@ public class OnlineActivity extends Activity
 
             if (minAutoMatchPlayers > 0) {
                 autoMatchCriteria = RoomConfig.createAutoMatchCriteria(
-                        minAutoMatchPlayers, maxAutoMatchPlayers, 0);
+                        1, 1, 0);
             } else {
                 autoMatchCriteria = null;
             }
-
+            keepScreenOn();
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
                     .addInvitedPlayers(invitees)
                     .setAutoMatchCriteria(autoMatchCriteria).build();
-
+           
             // Start the match
             Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(
                     new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
@@ -854,11 +855,13 @@ public class OnlineActivity extends Activity
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
         Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
+        Log.d("Trying to update: ", "" + (cMatch == match));
         if(cMatch == match){
-        	updateMatch(match);
+        	updateMatch(match);	
         }
         
     }
+    
     
 
     @Override
@@ -975,6 +978,7 @@ public class OnlineActivity extends Activity
                  startActivityForResult(intent, RC_LOOK_AT_MATCHES);
             	break;
             case R.id.button_quick_game:
+            	keepScreenOn();
             	Bundle autoMatchCriteria = RoomConfig.createAutoMatchCriteria(
                         1, 1, 0);
 
@@ -993,6 +997,7 @@ public class OnlineActivity extends Activity
                 Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(cb);
             	break;
             case R.id.button1:
+            	stopKeepingScreenOn();
             	if(isDoingTurn){
             	showWarning("Exit Attempt", "You must finish turn to return to main menu.");
             	}
@@ -1738,12 +1743,21 @@ public class OnlineActivity extends Activity
 			return false;
 	     	
 	    }
+	    public boolean dontSwitchTop = false;
+	    public boolean dontSwitchTopRight = false;
+	    public boolean dontSwitchTopLeft = false;
+	    public boolean went = false;
 	    class MyDragListener implements OnDragListener {
+	    	
 		    //Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
 		   // Drawable normalShape = getResources().getDrawable(R.drawable.shape);
 
 		    @Override
 		    public boolean onDrag(View v, DragEvent event) {
+		    	went = false;
+		    	dontSwitchTop = false;
+		    	dontSwitchTopRight = false;
+		    	dontSwitchTopLeft = false;
 		      int action = event.getAction();
 		      switch (event.getAction()) {
 		      case DragEvent.ACTION_DRAG_STARTED:
@@ -1773,13 +1787,14 @@ public class OnlineActivity extends Activity
 		        if (isBottomTurn&&((container == bottomRight || container == bottomLeft) && (view1 == oneBottomRight || view1 == twoBottomRight || view1 == threeBottomRight || view1 == fourBottomRight || view1 == zeroBottomRight || view1 == oneBottomLeft || view1 == twoBottomLeft || view1 == threeBottomLeft || view1 == fourBottomLeft || view1 == zeroBottomLeft))){
 		        	if (splitBottom(view1,container)){
 		        		isBottomTurn=true;
-		        		turnFinished();
+		        		went = true;
+		        		dontSwitchTop = true;
 		        	}
 		        }
 		        else if (!isBottomTurn&&((container == topRight||container==topLeft) && (view1 == oneTopRight || view1 == twoTopRight || view1 == threeTopRight || view1 == fourTopRight || view1 == zeroTopRight || view1 == oneTopLeft || view1 == twoTopLeft || view1 == threeTopLeft || view1 == fourTopLeft || view1 == zeroTopLeft))){
 		        	if (splitTop(view1,container)){
 		        		isBottomTurn=true;
-		        		turnFinished();
+		        		went = true;
 		        	}
 		        	
 		        	int numberTopLeft = 0;
@@ -1840,22 +1855,27 @@ public class OnlineActivity extends Activity
 
 		        else if (isBottomTurn && container == topRight){
 		        	attackTopRight(view1);
-		        	turnFinished();
+		        	dontSwitchTopLeft = true;
+		        	went = true;
 			    }
 		    	else if(isBottomTurn && container == topLeft){
 		    		attackTopLeft(view1);
-		    		turnFinished();
+		    		dontSwitchTopRight = true;
+		    		went = true;
 			    }
 		    	else if (!isBottomTurn && container == bottomRight){
 		    		attackBottomRight(view1);
-		    		turnFinished();
+		    		went = true;
 		    	}
 		    		
 		    	else if (!isBottomTurn && container == bottomLeft){
 		    	attackBottomLeft(view1);
-		    	turnFinished();
+		    	went = true;
 		    	}
 		        		findInvisible();
+		        		if(went){
+		        			turnFinished();
+		        		}
 		    	
 		      
 		       // container.addView(view);
@@ -2273,17 +2293,13 @@ public class OnlineActivity extends Activity
 	         mTurnData.turnCounter += 1;
 	         //mTurnData.data = mDataView.getText().toString();
 	        
-	         Log.d(TAG, "bottomLeft:  " + mTurnData.bottomLeft);
-	         Log.d(TAG, "bottomRight:  " + mTurnData.bottomRight);
-	         Log.d(TAG, "topLeft:  " + mTurnData.topLeft);
-	         Log.d(TAG, "topRight:  " + mTurnData.topRight);
-
+	        
 	         updatePositions();
 	         Log.d(TAG, "bottomLeft:  " + mTurnData.bottomLeft);
 	         Log.d(TAG, "bottomRight:  " + mTurnData.bottomRight);
 	         Log.d(TAG, "topLeft:  " + mTurnData.topLeft);
 	         Log.d(TAG, "topRight:  " + mTurnData.topRight);
-	
+	        
 	         showSpinner();
              
 	         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, mMatch.getMatchId(),
@@ -2294,74 +2310,126 @@ public class OnlineActivity extends Activity
 	                 processResult(result);
 	             }
 	         });
-	         bottomYT.setText("Please Wait");
+	         
+	         bottomYT.setText("Please Wait...");
 	         showSpinner();
 	         mTurnData = null;
 	    }
 	    public void updatePositions(){
-	    	 if(zeroTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = 0;
-	         }
-	         else if(oneTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = 1;
-	         }	
-	         else if(twoTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = 2;
-	         }
-	         else if(threeTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = 3;
-	         }
-	         else if(fourTopRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topRight = 4;
-	         }
-	         
-	         if(zeroTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = 0;
-	         }
-	         else if(oneTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = 1;
-	         }	
-	         else if(twoTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = 2;
-	         }
-	         else if(threeTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = 3;
-	         }
-	         else if(fourTopLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.topLeft = 4;
-	         }
+	    	int bottomRight = 0;
+	    	int bottomLeft = 0;
+	    	int topRight = 0;
+	    	int topLeft = 0;
+	    	if (dontSwitchTop){
+	    		bottomRight = mTurnData.topRight;
+	    		bottomLeft = mTurnData.topLeft;
+	    	}
+	    	else if(dontSwitchTopRight){
+	    		 bottomRight = mTurnData.topRight;
+	    		 if(zeroTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 0;
+		         }
+		         else if(oneTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 1;
+		         }	
+		         else if(twoTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 2;
+		         }
+		         else if(threeTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 3;
+		         }
+		         else if(fourTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 4;
+		         }
+	    	 }
+	    	 else if(dontSwitchTopLeft){
+	    		 bottomLeft = mTurnData.topLeft;
+	    		 if(zeroTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 0;
+		         }
+		         else if(oneTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 1;
+		         }	
+		         else if(twoTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 2;
+		         }
+		         else if(threeTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 3;
+		         }
+		         else if(fourTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 4;
+		         }
+	    	 }
+	    	 else{
+	    		 if(zeroTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 0;
+		         }
+		         else if(oneTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 1;
+		         }	
+		         else if(twoTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 2;
+		         }
+		         else if(threeTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 3;
+		         }
+		         else if(fourTopLeft.getVisibility() == View.VISIBLE){
+		        	 bottomLeft = 4;
+		         }
+	    		 if(zeroTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 0;
+		         }
+		         else if(oneTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 1;
+		         }	
+		         else if(twoTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 2;
+		         }
+		         else if(threeTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 3;
+		         }
+		         else if(fourTopRight.getVisibility() == View.VISIBLE){
+		        	 bottomRight = 4;
+		         }
+	    	 }
+	    	
+	       
 	         
 	         if(zeroBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = 0;
+	        	 topRight = 0;	
 	         }
 	         else if(oneBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = 1;
+	        	 topRight = 1;
 	         }	
 	         else if(twoBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = 2;
+	        	 topRight = 2;
 	         }
 	         else if(threeBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = 3;
+	        	 topRight = 3;
 	         }
 	         else if(fourBottomRight.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomRight = 4;
+	        	 topRight = 4;
 	         }
 	         
 	         if(zeroBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = 0;
+	        	 topLeft = 0;
 	         }
 	         else if(oneBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = 1;
+	        	 topLeft = 1;
 	         }	
 	         else if(twoBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = 2;
+	        	 topLeft = 2;
 	         }
 	         else if(threeBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = 3;
+	        	 topLeft = 3;
 	         }
 	         else if(fourBottomLeft.getVisibility() == View.VISIBLE){
-	        	 mTurnData.bottomLeft = 4;
+	        	 topLeft = 4;
 	         }
+	         mTurnData.bottomLeft = bottomLeft;
+	         mTurnData.bottomRight = bottomRight;
+	         mTurnData.topRight = topRight;
+	         mTurnData.topLeft = topLeft;
 	    }
    public void assignVars(){
 	   isBottomTurn = true;

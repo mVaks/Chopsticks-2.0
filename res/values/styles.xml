@@ -84,6 +84,14 @@
         <item name="android:textSize">@dimen/TitleSize</item>
         <item name="android:layout_marginBottom">40dp</item>
     </style>
+    <style name="GameName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/game_name</item>
+        <item name="android:textColor">@color/AccentColor</item>
+        <item name="android:textSize">@dimen/TitleSize</item>
+        <item name="android:layout_marginBottom">40dp</item>
+    </style>
 
     <style name="Blurb">
         <item name="android:layout_width">wrap_content</item>

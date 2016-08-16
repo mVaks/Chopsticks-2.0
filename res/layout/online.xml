@@ -159,8 +159,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/onetopleft" />
 
         <ImageView android:paddingLeft="@dimen/activity_horizontal_margin" 
@@ -169,8 +169,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/desc"
-             android:scaleX="1.5" android:paddingRight="@dimen/activity_horizontal_margin" 
-        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.5"
+             android:scaleX="1.05" android:paddingRight="@dimen/activity_horizontal_margin" 
+        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.05"
             android:src="@drawable/zerotopleft"
             android:visibility="gone" />
 
@@ -180,8 +180,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/desc"
-             android:scaleX="1.5" android:paddingRight="@dimen/activity_horizontal_margin" 
-        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.5"
+             android:scaleX="1.05" android:paddingRight="@dimen/activity_horizontal_margin" 
+        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.05"
             android:src="@drawable/twotopleft"
             android:visibility="gone" />
 
@@ -191,8 +191,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/desc"
-             android:scaleX="1.5" android:paddingRight="@dimen/activity_horizontal_margin" 
-        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.5"
+             android:scaleX="1.05" android:paddingRight="@dimen/activity_horizontal_margin" 
+        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.05"
             android:src="@drawable/threetopleft"
             android:visibility="gone" />
 
@@ -202,8 +202,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/desc"
-             android:scaleX="1.5" android:paddingRight="@dimen/activity_horizontal_margin" 
-        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.5"
+             android:scaleX="1.05" android:paddingRight="@dimen/activity_horizontal_margin" 
+        android:paddingBottom="@dimen/activity_vertical_margin" android:paddingTop="@dimen/activity_vertical_margin" android:scaleY="1.05"
             android:src="@drawable/fourtopleft"
             android:visibility="gone" />
 
@@ -229,8 +229,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/fourbottomleft"
             android:visibility="gone" />
 
@@ -244,8 +244,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/threebottomleft"
             android:visibility="gone" />
 
@@ -259,8 +259,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/onebottomleft" />
 
         <ImageView
@@ -273,8 +273,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/twobottomleft"
             android:visibility="gone" />
 
@@ -288,8 +288,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/zerobottomleft"
             android:visibility="gone" />
     </LinearLayout>
@@ -314,8 +314,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/zerotopright"
             android:visibility="gone" />
 
@@ -329,8 +329,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/onetopright" />
 
         <ImageView
@@ -343,8 +343,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/fourtopright"
             android:visibility="gone" />
 
@@ -358,8 +358,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/threetopright"
             android:visibility="gone" />
 
@@ -373,8 +373,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/twotopright"
             android:visibility="gone" />
     </LinearLayout>
@@ -399,8 +399,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/fourbottomright"
             android:visibility="gone" />
 
@@ -414,8 +414,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/onebottomright" />
 
         <ImageView
@@ -428,8 +428,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/threebottomright"
             android:visibility="gone" />
 
@@ -443,8 +443,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/twobottomright"
             android:visibility="gone" />
 
@@ -458,8 +458,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
+            android:scaleX="1.05"
+            android:scaleY="1.05"
             android:src="@drawable/zerobottomright"
             android:visibility="gone" />
     </LinearLayout>
