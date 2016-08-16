@@ -855,7 +855,7 @@ public class OnlineActivity extends Activity
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
         Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
-        Log.d("Trying to update: ", "" + (cMatch == match));
+        Log.d(TAG, "Trying to update: " + (cMatch == match));
         if(cMatch == match){
         	updateMatch(match);	
         }

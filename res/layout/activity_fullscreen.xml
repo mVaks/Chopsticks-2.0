@@ -48,16 +48,6 @@
             android:background="@drawable/shape"
             android:gravity="center_vertical|center_horizontal" >
 
-            <TextView
-                android:id="@+id/bottomYT"
-                android:editable = "true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="84dp"
-                android:text="@string/yourturn"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
             
         </RelativeLayout>
 
@@ -393,7 +383,18 @@
         android:layout_column="3"
         android:layout_gravity="left|bottom"
         android:layout_row="3"
+                android:gravity="left"
         android:background="@android:color/transparent"
         android:text="@string/restart" />
-    
+        <TextView
+        android:id="@+id/bottomYT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="3"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginRight="84dp"
+        android:layout_row="3"
+        android:editable="true"
+        android:text="@string/yourturn"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 </GridLayout>
