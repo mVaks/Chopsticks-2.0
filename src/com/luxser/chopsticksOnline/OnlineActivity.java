@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
@@ -28,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.leaderboard.Leaderboards.SubmitScoreResult;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
@@ -36,7 +40,6 @@ import com.google.android.gms.games.multiplayer.turnbased.OnTurnBasedMatchUpdate
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
-import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer.LoadMatchResult;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
 
@@ -78,6 +81,7 @@ public class OnlineActivity extends Activity
 
     // Current turn-based match
     private TurnBasedMatch mTurnBasedMatch;
+    public TurnBasedMatch cMatch = null;
 
     // Local convenience pointers
     public TextView mDataView;
@@ -101,9 +105,9 @@ public class OnlineActivity extends Activity
     // taken an action on the match, such as takeTurn()
     public SkeletonTurn mTurnData;
     final static int[] CLICKABLES = {
-        R.id.button_accept_popup_invitation, R.id.button_invite_players,
+    	 R.id.button_tutorial,R.id.next_one, R.id.previous_two, R.id.next_two, R.id.previous_three, R.id.next_three,R.id.previous_four, R.id.next_four,R.id.previous_five, R.id.next_five,R.id.next_six, R.id.no,R.id.button_accept_popup_invitation, R.id.button_invite_players,
         R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
-        R.id.button_sign_out, R.id.button_offline, R.id.button_single_player, R.id.button1
+        R.id.button_sign_out, R.id.button_offline, R.id.button_single_player, R.id.button1, R.id.button_leaderboard
 };
     private LinearLayout bottomLeft;
 	private LinearLayout bottomRight;
@@ -162,10 +166,9 @@ public class OnlineActivity extends Activity
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .setViewForPopups(findViewById(android.R.id.content))
                 .build();
 
-       
+        createSaved("matchid", "");
         
         // set up a click listener for everything we care about
         for (int id : CLICKABLES) {
@@ -175,6 +178,7 @@ public class OnlineActivity extends Activity
         //mDataView = ((TextView) findViewById(R.id.data_view));
         //mTurnTextView = ((TextView) findViewById(R.id.turn_counter_view));
     }
+    
 
     @Override
     protected void onStart() {
@@ -182,9 +186,16 @@ public class OnlineActivity extends Activity
         //Log.d(TAG, "onStart(): Connecting to Google APIs");
         //mGoogleApiClient.connect();
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(mSignInClicked)
+    	mGoogleApiClient.connect();
+    }
 
     @Override
     protected void onStop() {
+    	createSaved("matchid", "");
     	stopKeepingScreenOn();
         super.onStop();
         Log.d(TAG, "onStop(): Disconnecting from Google APIs");
@@ -196,6 +207,7 @@ public class OnlineActivity extends Activity
 
     @Override
     public void onConnected(Bundle connectionHint) {
+    	
         Log.d(TAG, "onConnected(): Connection successful");
         Games.Invitations.registerInvitationListener(mGoogleApiClient, this);
         Games.TurnBasedMultiplayer.registerMatchUpdateListener(mGoogleApiClient, this);
@@ -203,7 +215,7 @@ public class OnlineActivity extends Activity
         // Retrieve the TurnBasedMatch from the connectionHint
         if (connectionHint != null) {
             mTurnBasedMatch = connectionHint.getParcelable(Multiplayer.EXTRA_TURN_BASED_MATCH);
-
+            
             if (mTurnBasedMatch != null) {
                 if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
                     Log.d(TAG, "Warning: accessing TurnBasedMatch when not connected");
@@ -229,7 +241,9 @@ public class OnlineActivity extends Activity
         // to register a MatchUpdateListener.
         Games.TurnBasedMultiplayer.registerMatchUpdateListener(mGoogleApiClient, this);
     }
-
+    public void createSaved(String name, String value){
+    	PreferenceManager.getDefaultSharedPreferences(this).edit().putString(name, value).commit();  
+    }
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "onConnectionSuspended():  Trying to reconnect.");
@@ -302,6 +316,9 @@ public class OnlineActivity extends Activity
     // giving up on the view.
     public void onCancelClicked(View view) {
         showSpinner();
+        if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         Games.TurnBasedMultiplayer.cancelMatch(mGoogleApiClient, mMatch.getMatchId())
                 .setResultCallback(new ResultCallback<TurnBasedMultiplayer.CancelMatchResult>() {
                     @Override
@@ -319,7 +336,9 @@ public class OnlineActivity extends Activity
     public void onLeaveClicked(View view) {
         showSpinner();
         String nextParticipantId = getNextParticipantId();
-
+        if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         Games.TurnBasedMultiplayer.leaveMatchDuringTurn(mGoogleApiClient, mMatch.getMatchId(),
                 nextParticipantId).setResultCallback(
                     new ResultCallback<TurnBasedMultiplayer.LeaveMatchResult>() {
@@ -335,6 +354,9 @@ public class OnlineActivity extends Activity
     // Finish the game. Sometimes, this is your only choice.
     public void onFinish() {
         showSpinner();
+        if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient, mMatch.getMatchId())
                 .setResultCallback(new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
                     @Override
@@ -377,6 +399,8 @@ public class OnlineActivity extends Activity
 
     // Update the visibility based on what state we're in.
     public void setViewVisibility() {
+    
+    	cMatch = mMatch;
         boolean isSignedIn = (mGoogleApiClient != null) && (mGoogleApiClient.isConnected());
 
         if (!isSignedIn) {
@@ -392,8 +416,8 @@ public class OnlineActivity extends Activity
         }
 
 
-        ((TextView) findViewById(R.id.name_field)).setText(Games.Players.getCurrentPlayer(
-                mGoogleApiClient).getDisplayName());
+        //((TextView) findViewById(R.id.name_field)).setText(Games.Players.getCurrentPlayer(
+           //     mGoogleApiClient).getDisplayName());
         findViewById(R.id.screen_sign_in).setVisibility(View.GONE);
         if(justWent){
         	
@@ -402,6 +426,11 @@ public class OnlineActivity extends Activity
             findViewById(R.id.screen_main).setVisibility(View.GONE);
             findViewById(R.id.screen_game).setVisibility(View.VISIBLE);
             
+        }
+        else if(notTurn){
+        	 notTurn = false;
+        	 findViewById(R.id.screen_main).setVisibility(View.GONE);
+             findViewById(R.id.screen_game).setVisibility(View.VISIBLE);
         }
         else{
         	
@@ -478,7 +507,10 @@ public class OnlineActivity extends Activity
         	case 4: fourBottomRight.setVisibility(View.VISIBLE);
         		break;
         }
-
+        if(ifTopWon()){
+        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
+	    	bottomYT.setText("You Lost");
+        }
        
         //mDataView.setText(mTurnData.data);
         //mTurnTextView.setText("Turn " + mTurnData.turnCounter);
@@ -537,6 +569,8 @@ public class OnlineActivity extends Activity
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                            	findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+                                findViewById(R.id.screen_game).setVisibility(View.GONE);
                             }
                         });
 
@@ -548,6 +582,12 @@ public class OnlineActivity extends Activity
     @Override
     public void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
+        //just returned from displaying the leaderboard
+        if(request==1337)
+            {
+        	findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+            return;
+            }
         if (request == RC_SIGN_IN) {
             mSignInClicked = false;
             mResolvingConnectionFailure = false;
@@ -594,7 +634,7 @@ public class OnlineActivity extends Activity
 
             if (minAutoMatchPlayers > 0) {
                 autoMatchCriteria = RoomConfig.createAutoMatchCriteria(
-                        1, 1, 0);
+                		1, 1, 0);
             } else {
                 autoMatchCriteria = null;
             }
@@ -602,7 +642,9 @@ public class OnlineActivity extends Activity
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
                     .addInvitedPlayers(invitees)
                     .setAutoMatchCriteria(autoMatchCriteria).build();
-           
+            if(!mGoogleApiClient.isConnected()){
+        		mGoogleApiClient.reconnect();
+        	}
             // Start the match
             Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(
                     new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
@@ -631,7 +673,9 @@ public class OnlineActivity extends Activity
         mTurnData.bottomRight = 1;
 
         mMatch = match;
-
+        if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
         String myParticipantId = mMatch.getParticipantId(playerId);
 
@@ -656,6 +700,9 @@ public class OnlineActivity extends Activity
     // If you choose to rematch, then call it and wait for a response.
     public void rematch() {
         showSpinner();
+        if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         Games.TurnBasedMultiplayer.rematch(mGoogleApiClient, mMatch.getMatchId()).setResultCallback(
                 new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
             @Override
@@ -676,7 +723,9 @@ public class OnlineActivity extends Activity
      * @return participantId of next player, or null if automatching
      */
     public String getNextParticipantId() {
-
+        if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         String playerId = Games.Players.getCurrentPlayerId(mGoogleApiClient);
         String myParticipantId = mMatch.getParticipantId(playerId);
 
@@ -708,10 +757,10 @@ public class OnlineActivity extends Activity
     // from the inbox, or else create a match and want to start it.
     public void updateMatch(TurnBasedMatch match) {
         mMatch = match;
-
+        createSaved("matchid", mMatch.getMatchId());
         int status = match.getStatus();
         int turnStatus = match.getTurnStatus();
-
+       
         switch (status) {
             case TurnBasedMatch.MATCH_STATUS_CANCELED:
                 showWarning("Canceled!", "This game was canceled!");
@@ -728,6 +777,8 @@ public class OnlineActivity extends Activity
                     showWarning(
                             "Complete!",
                             "This game is over; someone finished it, and so did you!  There is nothing to be done.");
+                    findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+                    findViewById(R.id.screen_game).setVisibility(View.GONE);	
                     break;
                 }
 
@@ -735,7 +786,10 @@ public class OnlineActivity extends Activity
                 // so we allow this to continue.
                 showWarning("Complete!",
                         "This game is over; someone finished it!  You can only finish it now.");
+                findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+                findViewById(R.id.screen_game).setVisibility(View.GONE);
         }
+       
 
         // OK, it's active. Check on turn status.
         switch (turnStatus) {
@@ -745,7 +799,8 @@ public class OnlineActivity extends Activity
                 return;
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
                 // Should return results.
-                showWarning("Alas...", "It's not your turn.");
+//            	mTurnData = SkeletonTurn.unpersist(mMatch.getData());
+//                setGameplayUINotTurn();
                 break;
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good inititative!",
@@ -756,8 +811,65 @@ public class OnlineActivity extends Activity
 
         setViewVisibility();
     }
+    public boolean notTurn;
+    private void setGameplayUINotTurn() {
+    	 dismissSpinner();
+    	 assignVarsNotTurn();
+    	 notTurn = true;
+    	 setViewVisibility();
+         viewsGone();
+         switch(mTurnData.topLeft){
+         	case 0: zeroTopLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 1:	oneTopLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 2: twoTopLeft.setVisibility(View.VISIBLE);
+         		break; 
+         	case 3: threeTopLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 4: fourTopLeft.setVisibility(View.VISIBLE);
+         		break;
+         }
+         switch(mTurnData.topRight){
+         	case 0: zeroTopRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 1:	oneTopRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 2: twoTopRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 3: threeTopRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 4: fourTopRight.setVisibility(View.VISIBLE);
+         		break;
+         }
+         switch(mTurnData.bottomLeft){
+         	case 0: zeroBottomLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 1:	oneBottomLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 2: twoBottomLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 3: threeBottomLeft.setVisibility(View.VISIBLE);
+         		break;
+         	case 4: fourBottomLeft.setVisibility(View.VISIBLE);
+         		break;
+         }
+         switch(mTurnData.bottomRight){
+         	case 0: zeroBottomRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 1:	oneBottomRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 2: twoBottomRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 3: threeBottomRight.setVisibility(View.VISIBLE);
+         		break;
+         	case 4: fourBottomRight.setVisibility(View.VISIBLE);
+         		break;
+         }
 
-    private void processResult(TurnBasedMultiplayer.CancelMatchResult result) {
+	}
+
+	private void processResult(TurnBasedMultiplayer.CancelMatchResult result) {
         dismissSpinner();
 
         if (!checkStatusCode(null, result.getStatus().getStatusCode())) {
@@ -771,6 +883,9 @@ public class OnlineActivity extends Activity
     }
 
     private void processResult(TurnBasedMultiplayer.InitiateMatchResult result) {
+    	if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         TurnBasedMatch match = result.getMatch();
         dismissSpinner();
 
@@ -802,7 +917,11 @@ public class OnlineActivity extends Activity
 
 
     public void processResult(TurnBasedMultiplayer.UpdateMatchResult result) {
+    	if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         TurnBasedMatch match = result.getMatch();
+        createSaved("matchid", match.getMatchId());
         dismissSpinner();
         if (!checkStatusCode(match, result.getStatus().getStatusCode())) {
             return;
@@ -825,6 +944,9 @@ public class OnlineActivity extends Activity
     // Handle notification events.
     @Override
     public void onInvitationReceived(Invitation invitation) {
+    	if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
         Toast.makeText(
                 this,
                 "An invitation has arrived from "
@@ -842,8 +964,14 @@ public class OnlineActivity extends Activity
 	           // single-player: show on main screen and gameplay screen
 	           showInvPopup = ( ((findViewById(R.id.screen_main).getVisibility()) == View.VISIBLE) || ((findViewById(R.id.screen_game).getVisibility()) == View.VISIBLE) );
 	       }
-	       Games.setViewForPopups(mGoogleApiClient, getWindow().getDecorView().findViewById(android.R.id.content));
-	       findViewById(R.id.invitation_popup).setVisibility(showInvPopup ? View.VISIBLE : View.GONE);
+	       LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	       View view = inflater.inflate(R.layout.turn, null); //custom_layout is your xml file which contains popuplayout
+	       LinearLayout layout = (LinearLayout) view.findViewById(R.id.invitation_popup);
+	       if(showInvPopup)
+	    	   layout.setVisibility(View.VISIBLE);
+	       else
+	    	   layout.setVisibility(View.GONE);
+	       //findViewById(R.id.invitation_popup).setVisibility(showInvPopup ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -851,13 +979,21 @@ public class OnlineActivity extends Activity
     	 mIncomingInvitationId = null;
         Toast.makeText(this, "An invitation was removed.", Toast.LENGTH_SHORT).show();
     }
-    public TurnBasedMatch cMatch = null;
     @Override
     public void onTurnBasedMatchReceived(TurnBasedMatch match) {
-        Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Trying to update: " + (cMatch == match));
-        if(cMatch == match){
+    	if(!mGoogleApiClient.isConnected()){
+    		mGoogleApiClient.reconnect();
+    	}
+       
+
+    	String matchid = PreferenceManager.getDefaultSharedPreferences(this).getString("matchid", "defaultStringIfNothingFound"); 
+      Log.d(TAG, "Trying to update: " + (match.getMatchId().equals(matchid)) + "Current id: " + (matchid) + "Other: " + (match.getMatchId()));
+        if(match.getMatchId().equals(matchid)){
+        	Toast.makeText(this, "This match was updated.", Toast.LENGTH_SHORT).show();
         	updateMatch(match);	
+       }
+        else{
+        	 Toast.makeText(this, "A match was updated.", Toast.LENGTH_SHORT).show();
         }
         
     }
@@ -968,11 +1104,17 @@ public class OnlineActivity extends Activity
                 mIncomingInvitationId = null;
                 break;
             case R.id.button_invite_players:
+            	if(!mGoogleApiClient.isConnected()){
+            		mGoogleApiClient.reconnect();
+            	}
             	 intent = Games.TurnBasedMultiplayer.getSelectOpponentsIntent(mGoogleApiClient,
-                        1, 7, true);
+                        1, 1, true);
                 startActivityForResult(intent, RC_SELECT_PLAYERS);
             	break;
             case R.id.button_see_invitations:
+            	if(!mGoogleApiClient.isConnected()){
+            		mGoogleApiClient.reconnect();
+            	}
             	 intent = Games.TurnBasedMultiplayer.getInboxIntent(mGoogleApiClient);
                 // showSpinner();
                  startActivityForResult(intent, RC_LOOK_AT_MATCHES);
@@ -986,7 +1128,9 @@ public class OnlineActivity extends Activity
                         .setAutoMatchCriteria(autoMatchCriteria).build();
 
                 showSpinner();
-
+                if(!mGoogleApiClient.isConnected()){
+            		mGoogleApiClient.reconnect();
+            	}
                 // Start the match
                 ResultCallback<TurnBasedMultiplayer.InitiateMatchResult> cb = new ResultCallback<TurnBasedMultiplayer.InitiateMatchResult>() {
                     @Override
@@ -998,21 +1142,80 @@ public class OnlineActivity extends Activity
             	break;
             case R.id.button1:
             	stopKeepingScreenOn();
-            	if(isDoingTurn){
-            	showWarning("Exit Attempt", "You must finish turn to return to main menu.");
-            	}
-            	else{
+            		createSaved("matchid", "");
             		justWent = false;
             		findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
                     findViewById(R.id.screen_game).setVisibility(View.GONE); 
-            	}
             	break;
+            case R.id.button_leaderboard:
+            	if(!mGoogleApiClient.isConnected()){
+            		mGoogleApiClient.reconnect();
+            	}
+            	findViewById(R.id.screen_main).setVisibility(View.GONE);
+            	startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient,
+            			 getString(R.string.LEADERBOARD_ID)), 1337);
+            	break;
+            case R.id.button_tutorial:
+            	findViewById(R.id.tutorial_one).setVisibility(View.VISIBLE);
+        		findViewById(R.id.screen_sign_in).setVisibility(View.GONE);
+            	break;
+            case R.id.next_one:
+            	findViewById(R.id.tutorial_one).setVisibility(View.GONE);
+        		findViewById(R.id.tutorial_two).setVisibility(View.VISIBLE);
+            	break;
+            case R.id.next_two:
+            	findViewById(R.id.tutorial_two).setVisibility(View.GONE);
+        		findViewById(R.id.tutorial_three).setVisibility(View.VISIBLE);
+            	break;
+            case R.id.previous_two:
+            	findViewById(R.id.tutorial_one).setVisibility(View.VISIBLE);
+        		findViewById(R.id.tutorial_two).setVisibility(View.GONE);
+            	break;
+            case R.id.next_three:
+            	findViewById(R.id.tutorial_three).setVisibility(View.GONE);
+        		findViewById(R.id.tutorial_four).setVisibility(View.VISIBLE);
+            	break;
+            case R.id.previous_three:
+            	findViewById(R.id.tutorial_two).setVisibility(View.VISIBLE);
+        		findViewById(R.id.tutorial_three).setVisibility(View.GONE);
+            	break;
+            case R.id.next_four:
+            	findViewById(R.id.tutorial_four).setVisibility(View.GONE);
+        		findViewById(R.id.tutorial_five).setVisibility(View.VISIBLE);
+            	break;
+            case R.id.previous_four:
+            	findViewById(R.id.tutorial_three).setVisibility(View.VISIBLE);
+        		findViewById(R.id.tutorial_four).setVisibility(View.GONE);
+            	break;
+            case R.id.next_five:
+            	findViewById(R.id.tutorial_five).setVisibility(View.GONE);
+        		findViewById(R.id.tutorial_six).setVisibility(View.VISIBLE);
+            	break;
+            case R.id.previous_five:
+            	findViewById(R.id.tutorial_four).setVisibility(View.VISIBLE);
+        		findViewById(R.id.tutorial_five).setVisibility(View.GONE);
+            	break;
+            case R.id.next_six:
+            	intent =  new Intent(OnlineActivity.this, SinglePlayerActivity.class);
+        		startActivity(intent);
+            	break;
+            case R.id.no:
+            	findViewById(R.id.tutorial_six).setVisibility(View.GONE);
+        		findViewById(R.id.screen_sign_in).setVisibility(View.VISIBLE);
+            	break;
+            	
+            	
             	
              }
 
              
     }
+    
     public void onBackPressed(){
+    	if(findViewById(R.id.tutorial_one).getVisibility() == View.VISIBLE){
+    		findViewById(R.id.tutorial_one).setVisibility(View.GONE);
+    		findViewById(R.id.screen_sign_in).setVisibility(View.VISIBLE);
+    	}
     	
 	 }
     private final class MyTouchListener implements OnTouchListener {
@@ -1786,14 +1989,14 @@ public class OnlineActivity extends Activity
 		        LinearLayout container = (LinearLayout) v;
 		        if (isBottomTurn&&((container == bottomRight || container == bottomLeft) && (view1 == oneBottomRight || view1 == twoBottomRight || view1 == threeBottomRight || view1 == fourBottomRight || view1 == zeroBottomRight || view1 == oneBottomLeft || view1 == twoBottomLeft || view1 == threeBottomLeft || view1 == fourBottomLeft || view1 == zeroBottomLeft))){
 		        	if (splitBottom(view1,container)){
-		        		isBottomTurn=true;
+		        		isBottomTurn=!isBottomTurn;
 		        		went = true;
 		        		dontSwitchTop = true;
 		        	}
 		        }
 		        else if (!isBottomTurn&&((container == topRight||container==topLeft) && (view1 == oneTopRight || view1 == twoTopRight || view1 == threeTopRight || view1 == fourTopRight || view1 == zeroTopRight || view1 == oneTopLeft || view1 == twoTopLeft || view1 == threeTopLeft || view1 == fourTopLeft || view1 == zeroTopLeft))){
 		        	if (splitTop(view1,container)){
-		        		isBottomTurn=true;
+		        		isBottomTurn=!isBottomTurn;
 		        		went = true;
 		        	}
 		        	
@@ -1856,20 +2059,24 @@ public class OnlineActivity extends Activity
 		        else if (isBottomTurn && container == topRight){
 		        	attackTopRight(view1);
 		        	dontSwitchTopLeft = true;
+		        	if(!isBottomTurn)
 		        	went = true;
 			    }
 		    	else if(isBottomTurn && container == topLeft){
 		    		attackTopLeft(view1);
 		    		dontSwitchTopRight = true;
+		    		if(!isBottomTurn)
 		    		went = true;
 			    }
 		    	else if (!isBottomTurn && container == bottomRight){
 		    		attackBottomRight(view1);
+		    		if(!isBottomTurn)
 		    		went = true;
 		    	}
 		    		
 		    	else if (!isBottomTurn && container == bottomLeft){
 		    	attackBottomLeft(view1);
+		    	if(!isBottomTurn)
 		    	went = true;
 		    	}
 		        		findInvisible();
@@ -1890,24 +2097,13 @@ public class OnlineActivity extends Activity
 		        view.setVisibility(View.VISIBLE);
 		        if (isBottomTurn){
 		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
-		        	findViewById(R.id.topYT).setVisibility(View.GONE);
+		        	//findViewById(R.id.topYT).setVisibility(View.GONE);
 		        }
 		        else if (!isBottomTurn){
-		        	findViewById(R.id.topYT).setVisibility(View.VISIBLE);
-		        	findViewById(R.id.bottomYT).setVisibility(View.GONE);
+		        	//findViewById(R.id.topYT).setVisibility(View.VISIBLE);
+		        	//findViewById(R.id.bottomYT).setVisibility(View.GONE);
 		        }
-		        if(ifBottomWon()){
-		        	findViewById(R.id.topYT).setVisibility(View.VISIBLE);
-		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
-        	    	bottomYT.setText("You Won");
-		        	topYT.setText("You Lost");
-        	    }
-		        else if(ifTopWon()){
-		        	findViewById(R.id.topYT).setVisibility(View.VISIBLE);
-		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
-        	    	bottomYT.setText("You Lost");
-		        	topYT.setText("You Won");
-        	    }
+		        
         	    	
 		      default:
 		    	
@@ -1917,7 +2113,7 @@ public class OnlineActivity extends Activity
 		    }
 		  }
 	    public void attackTopRight(View view1){
-	    	isBottomTurn=true;
+	    	isBottomTurn=!isBottomTurn;
 	    	if (oneTopRight.getVisibility() == View.VISIBLE){
 	    		if (view1 == oneBottomLeft || view1 == oneBottomRight){
 	    		       oneTopRight.setVisibility(View.GONE);
@@ -2008,7 +2204,7 @@ public class OnlineActivity extends Activity
 	    	}
 	    }
 	    public void attackBottomRight(View view1){
-	    	isBottomTurn=true;
+	    	isBottomTurn=!isBottomTurn;
 			if (oneBottomRight.getVisibility() == View.VISIBLE){
 	    		if (view1 == oneTopLeft || view1 == oneTopRight){
 	    		       oneBottomRight.setVisibility(View.GONE);
@@ -2099,7 +2295,7 @@ public class OnlineActivity extends Activity
 	    	}
 		}
 	    public void attackBottomLeft(View view1){
-	    	isBottomTurn=true;
+	    	isBottomTurn=!isBottomTurn;
 			if (oneBottomLeft.getVisibility() == View.VISIBLE){
 	    		if (view1 == oneTopLeft || view1 == oneTopRight){
 	    			oneBottomLeft.setVisibility(View.GONE);
@@ -2191,7 +2387,7 @@ public class OnlineActivity extends Activity
 	    }
 	  
 	    public void attackTopLeft(View view1){
-	    	isBottomTurn=true;
+	    	isBottomTurn=!isBottomTurn;
 		      if (oneTopLeft.getVisibility() == View.VISIBLE){
 	  		if (view1 == oneBottomLeft || view1 == oneBottomRight){
 	  			oneTopLeft.setVisibility(View.GONE);
@@ -2285,7 +2481,6 @@ public class OnlineActivity extends Activity
 	        		views.setOnTouchListener(null);
 	    	 }
 	    	 justWent = true;
-	    	 cMatch = mMatch;
 	    	 showSpinner();
 
 	         String nextParticipantId = getNextParticipantId();
@@ -2301,7 +2496,26 @@ public class OnlineActivity extends Activity
 	         Log.d(TAG, "topRight:  " + mTurnData.topRight);
 	        
 	         showSpinner();
-             
+	         if(!mGoogleApiClient.isConnected()){
+	     		mGoogleApiClient.reconnect();
+	     	}
+	         if(ifBottomWon()){
+		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
+     	    	bottomYT.setText("You Won");
+     	    		int temp = PreferenceManager.getDefaultSharedPreferences(this).getInt("myWins", 0);
+		        	createSaved("myWins",temp + 1); 
+		        	Games.Leaderboards.submitScoreImmediate(mGoogleApiClient, getString(R.string.LEADERBOARD_ID), PreferenceManager.getDefaultSharedPreferences(this).getInt("myWins", 0)).setResultCallback(new myLeaderBoardSubmitScoreCallback());
+		        	Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient,mMatch.getMatchId()).setResultCallback(
+			                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
+			    	             @Override
+			    	             public void onResult(TurnBasedMultiplayer.UpdateMatchResult result) {
+			    	                 processResult(result);
+			    	             }
+			    	         });
+		      }
+	         else{
+	         Log.d(TAG,"Trying to update: " + mMatch.getMatchId());
+	         createSaved("matchid", mMatch.getMatchId());
 	         Games.TurnBasedMultiplayer.takeTurn(mGoogleApiClient, mMatch.getMatchId(),
 	                 mTurnData.persist(), nextParticipantId).setResultCallback(
 	                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
@@ -2310,11 +2524,18 @@ public class OnlineActivity extends Activity
 	                 processResult(result);
 	             }
 	         });
-	         
-	         bottomYT.setText("Please Wait...");
+		        
+		       
+	         bottomYT.setText("Waiting...");
 	         showSpinner();
 	         mTurnData = null;
+	         }
+		        
 	    }
+	    
+	    public void createSaved(String name, int value){
+	       	PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(name, value).commit();  
+	       }
 	    public void updatePositions(){
 	    	int bottomRight = 0;
 	    	int bottomLeft = 0;
@@ -2431,6 +2652,67 @@ public class OnlineActivity extends Activity
 	         mTurnData.topRight = topRight;
 	         mTurnData.topLeft = topLeft;
 	    }
+	    public void assignVarsNotTurn(){
+	    	
+	    	  	 
+	    	  	 zeroTopLeft = (ImageView) findViewById(R.id.zeroTopLeft);   
+
+	    	    	  oneTopLeft = (ImageView) findViewById(R.id.oneTopLeft);
+	    	    	
+	    	    	  
+	    	    	  twoTopLeft = (ImageView) findViewById(R.id.twoTopLeft);
+
+	    	       
+	    	    	  threeTopLeft = (ImageView) findViewById(R.id.threeTopLeft);
+
+	    	       
+	    	    	  fourTopLeft = (ImageView) findViewById(R.id.fourTopLeft);
+
+	    	    	  
+	    	    	  zeroTopRight = (ImageView) findViewById(R.id.zeroTopRight);
+	    	  
+	    	    	  
+	    	    	  oneTopRight= (ImageView) findViewById(R.id.oneTopRight);
+
+	    	       
+	    	    	  twoTopRight= (ImageView) findViewById(R.id.twoTopRight);
+
+	    	    	  
+	    	    	  threeTopRight= (ImageView) findViewById(R.id.threeTopRight);
+
+	    	    	  
+	    	    	  fourTopRight= (ImageView) findViewById(R.id.fourTopRight);
+
+	    	      	
+	    	    	  zeroBottomLeft = (ImageView) findViewById(R.id.zeroBottomLeft);
+
+	    	      	
+	    	    	  oneBottomLeft= (ImageView) findViewById(R.id.oneBottomLeft);
+
+
+	    	    	  twoBottomLeft= (ImageView) findViewById(R.id.twoBottomLeft);
+
+	    	    	  
+	    	    	  threeBottomLeft= (ImageView) findViewById(R.id.threeBottomLeft);
+
+	    	      	
+	    	    	  fourBottomLeft= (ImageView) findViewById(R.id.fourBottomLeft);
+
+	    	    	
+	    	    	  zeroBottomRight = (ImageView) findViewById(R.id.zeroBottomRight);
+
+	    	      	
+	    	    	  oneBottomRight= (ImageView) findViewById(R.id.oneBottomRight);
+
+	    	      	
+	    	    	  twoBottomRight= (ImageView) findViewById(R.id.twoBottomRight);
+
+	    	      	
+	    	    	  threeBottomRight= (ImageView) findViewById(R.id.threeBottomRight);
+
+	    	      	
+	    	    	  fourBottomRight= (ImageView) findViewById(R.id.fourBottomRight); 
+	    }
    public void assignVars(){
 	   isBottomTurn = true;
        bottomLeft = (LinearLayout) findViewById(R.id.bottomleft);
@@ -2510,7 +2792,7 @@ public class OnlineActivity extends Activity
       bottomRight.setOnDragListener(new MyDragListener());
       
       bottomYT = (TextView) findViewById(R.id.bottomYT);
-  	topYT = (TextView) findViewById(R.id.topYT);
+  	//topYT = (TextView) findViewById(R.id.topYT);
 
    }
 // Sets the flag to keep this screen on. It's recommended to do that during
@@ -2526,4 +2808,14 @@ public class OnlineActivity extends Activity
    void stopKeepingScreenOn() {
        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
    }
+   class myLeaderBoardSubmitScoreCallback implements ResultCallback<SubmitScoreResult> {
+	    @Override
+	    public void onResult(SubmitScoreResult res) {
+	        if (res.getStatus().getStatusCode() == 0) {
+	            // data sent successfully to server.
+	            // display toast.
+	            Toast.makeText(OnlineActivity.this, "A score was updated in the Leaderboard.", Toast.LENGTH_SHORT).show();
+	        }
+	    }
+	}
 }

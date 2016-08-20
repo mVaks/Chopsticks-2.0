@@ -75,6 +75,16 @@
         <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
     </style>
+        <style name="Tutorial" parent="@style/LLScreen">
+        <item name="android:background">@color/PopupColor</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_gravity">top|right</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    
 
     <style name="GameTitle">
         <item name="android:layout_width">wrap_content</item>
@@ -135,7 +145,55 @@
         <item name="android:text">@string/inv_popup_text</item>
         <item name="android:gravity">center</item>
     </style>
-
+    
+     <style name="tutorial_one">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/PopupTextColor</item>
+        <item name="android:text">@string/tutorial_one</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="tutorial_two">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/PopupTextColor</item>
+        <item name="android:text">@string/tutorial_two</item>
+        <item name="android:gravity">center</item>
+    </style>
+<style name="tutorial_three">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/PopupTextColor</item>
+        <item name="android:text">@string/tutorial_three</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="tutorial_four">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/PopupTextColor</item>
+        <item name="android:text">@string/tutorial_four</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="tutorial_five">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/PopupTextColor</item>
+        <item name="android:text">@string/tutorial_five</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="tutorial_six">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/PopupTextColor</item>
+        <item name="android:text">@string/tutorial_six</item>
+        <item name="android:gravity">center</item>
+    </style>
     <style name="InvPopupButton" parent="@style/GameButton">
         <item name="android:background">@color/ButtonTextColor</item>
         <item name="android:textColor">@color/AccentColor</item>

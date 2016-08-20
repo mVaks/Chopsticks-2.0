@@ -3,7 +3,9 @@ package com.luxser.chopsticksOnline;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -180,17 +182,7 @@ public class MainActivity extends Activity {
         bottomYT = (TextView) findViewById(R.id.bottomYT);
     	topYT = (TextView) findViewById(R.id.topYT);
 
-    	 Button clr=(Button)findViewById(R.id.button1);
-  	   clr.setOnClickListener(new OnClickListener() {
-
-  	       public void onClick(View v) {
-  	    	   onDestroy();
-  	    	   Intent i = new Intent(MainActivity.this, MainActivity.class);
-  	    	     startActivity(i);
-  	    	     
-  	           
-  	}
-  	   });
+    	
       		  
       	
     	
@@ -201,10 +193,14 @@ public class MainActivity extends Activity {
         	    if(ifBottomWon()){
         	    	bottomYT.setText("You Won");
 		        	topYT.setText("You Lost");
+		        	 askForRematch();
+		        	 return;
         	    }
         	    if(ifTopWon()){
         	    	bottomYT.setText("You Lost");
 		        	topYT.setText("You Won");
+		        	 askForRematch();
+		        	 return;
         	    }
         	    	
         	  }
@@ -222,10 +218,14 @@ public class MainActivity extends Activity {
       	    if(ifBottomWon()){
       	    	bottomYT.setText("You Won");
 		        	topYT.setText("You Lost");
+		        	 askForRematch();
+		        	 return;
       	    }
       	    if(ifTopWon()){
       	    	bottomYT.setText("You Lost");
 		        	topYT.setText("You Won");
+		        	 askForRematch();
+		        	 return;
       	    }
       	  
     
@@ -233,6 +233,31 @@ public class MainActivity extends Activity {
 		      handler.postDelayed(this, 1000);          // reschedule the handler
 		   }
 		};
+		public void askForRematch() {
+	        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+	        alertDialogBuilder.setMessage("Do you want a rematch?");
+
+	        alertDialogBuilder
+	                .setCancelable(false)
+	                .setPositiveButton("Sure, rematch!",
+	                        new DialogInterface.OnClickListener() {
+	                            @Override
+	                            public void onClick(DialogInterface dialog, int id) {
+	                            	onDestroy();
+	                  	    	   Intent i = new Intent(MainActivity.this, MainActivity.class);
+	                  	    	     startActivity(i);
+	                            }
+	                        })
+	                .setNegativeButton("No.",
+	                        new DialogInterface.OnClickListener() {
+	                            @Override
+	                            public void onClick(DialogInterface dialog, int id) {
+	                            }
+	                        });
+
+	        alertDialogBuilder.show();
+	    }
 	private void findInvisible(){
 		if (oneTopRight.getVisibility() == View.INVISIBLE){
 			oneTopRight.setVisibility(View.VISIBLE);
@@ -358,6 +383,7 @@ public class MainActivity extends Activity {
 		        //view3.setVisibility(View.VISIBLE);
 		        break;
 		      case DragEvent.ACTION_DROP:
+		    	   
 		        // Dropped, reassign View to ViewGroup
 		        View view1 = (View) event.getLocalState();
 		       // ViewGroup owner = (ViewGroup) view1.getParent();
@@ -1598,7 +1624,7 @@ public class MainActivity extends Activity {
     	overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-    	 Intent i = new Intent(MainActivity.this, TurnOnline.class);
+    	 Intent i = new Intent(MainActivity.this, OnlineActivity.class);
 	     startActivity(i);
 	 }
 	 

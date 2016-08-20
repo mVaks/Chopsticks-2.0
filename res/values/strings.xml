@@ -15,19 +15,33 @@
     <string name="yourturn">Your Turn</string>
     <string name="restart">Restart</string>
     <string name="returnTo">Return to Main Menu</string>
-                              
+                             
+    <string name="tutorial_one">Chopsticks is a two player stategy game in which players start off extending a single finger from each hand.</string>
+    <string name="tutorial_two">Players make turn-based moves by either transferring fingers amongst their own hands or attacking and therefore adding their hand\'s value to their opponent\’s hand.</string>
+    <string name="tutorial_three">When transferring, the resulting number of fingers will contain the same as at the beginning of your turn.  For example, a player having three fingers on one hand and one on the other may choose to transfer to have two fingers on each hand.</string>
+	<string name="tutorial_four">When attacking, the number of fingers on your "attacking hand" do not change, however your opponents "attacked hand" will be the sum of your hand\'s value and theirs.</string>
+	<string name="tutorial_five">If a players hand sums to a value greater than 4 that hand is "dead" and can no longer be used to attack, however you can "revive" it by transferring fingers.</string>
+    <string name="tutorial_six">Do you want to try a match against and A.I.?</string>
+	
+    <string name="logout">Play offline single player and multiplayer.</string>
 <string name="game_title">Chopsticks Online!</string>
 <string name="game_name">Chopsticks!</string>
     <string name="game_blurb">A remake of the classic game of chopsticks!\nPlay online, offline, or single player!\n Can you beat your friends?\nOnly one way to find out!\nTo play online you must sign in with Google.</string>
     <string name="single_player">Single Player</string>
+    <string name="tutorial">Instructions</string>
     <string name="single_player_explanation">Get some practice!</string>
     <string name="quick_game">Quick game</string>
     <string name="invite_players">Invite friends</string>
     <string name="see_invitations">See invitations</string>
+    <string name="leaderboard">Leaderboard</string>
     <string name="quick_game_explanation">Challenge a random opponent.</string>
     <string name="invite_players_explanation">Invite friends to play a game.</string>
-    <string name="see_invitations_explanation">See who is inviting you right now.</string>
+    <string name="see_invitations_explanation">See current invitations and games.</string>
     <string name="inv_popup_text">Incoming invitation!</string>
+    <string name="next">Next</string>
+    <string name="previous">Back</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="accept_popup_invite">Accept!</string>
     <string name="sign_out">Sign Out</string>
     <string name="please_wait">Please wait&#8230;</string>
@@ -37,8 +51,10 @@
     <string name="is_inviting_you">is challenging you to a game!</string>
     <string name="signin_other_error">There was an issue with sign in. Please try again later.</string>
     
-        <string name="offline">Offline Multiplayer</string>
+    <string name="see_leaderboard">Check your rank on the leaderboards.</string>
     
+        <string name="offline">Offline Multiplayer</string>
+    <string name="LEADERBOARD_ID">CgkIgvCkx_EZEAIQBw</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email (required if registering)</string>

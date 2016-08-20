@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -27,7 +28,6 @@ public class SplashActivity extends Activity {
    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-   
    
    setContentView(R.layout.splashscreen);
    
@@ -57,5 +57,6 @@ public class SplashActivity extends Activity {
      }, splashInterval);
      
    };
+   
      
   }

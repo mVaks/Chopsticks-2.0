@@ -32,8 +32,7 @@
                 android:rotation="180"
                 android:text="@string/yourturn"
                 android:visibility="gone"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-            
+                android:textSize="@dimen/font_size" />
         </RelativeLayout>
 
                 <RelativeLayout
@@ -46,6 +45,15 @@
             android:layout_row="3"
             android:background="@drawable/shape"
             android:gravity="center_vertical|center_horizontal" >
+
+                    <TextView
+                        android:id="@+id/bottomYT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="84dp"
+                        android:editable="true"
+                        android:text="@string/yourturn"
+                        android:textSize="@dimen/font_size" />
             
         </RelativeLayout>
 
@@ -53,7 +61,7 @@
         android:id="@+id/topleft"
         android:screenOrientation="portrait"
         android:layout_width="wrap_content"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:layout_column="0"
         android:layout_gravity="start|top"
         android:layout_row="0"
@@ -123,7 +131,7 @@
     <LinearLayout
         android:id="@+id/bottomleft"
         android:layout_width="wrap_content"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:layout_column="0"
         android:layout_gravity="start|bottom"
         android:layout_row="3"
@@ -208,7 +216,7 @@
     <LinearLayout
         android:id="@+id/topright"
         android:layout_width="wrap_content"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:layout_column="3"
         android:layout_gravity="end|top"
         android:layout_row="0"
@@ -293,7 +301,7 @@
     <LinearLayout
         android:id="@+id/bottomright"
         android:layout_width="wrap_content"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:layout_column="3"
         android:layout_gravity="end|bottom"
         android:layout_row="3"
@@ -374,28 +382,5 @@
             android:src="@drawable/zerobottomright"
             android:visibility="gone" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_column="3"
-        android:layout_gravity="left|bottom"
-        android:gravity="left"
-        android:layout_row="3"
-        android:background="@android:color/transparent"
-        android:text="@string/restart" />
-
-    <TextView
-        android:id="@+id/bottomYT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="3"
-        android:layout_gravity="left|center_vertical"
-        android:layout_marginRight="84dp"
-        android:layout_row="3"
-        android:editable="true"
-        android:text="@string/yourturn"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
     
 </GridLayout>

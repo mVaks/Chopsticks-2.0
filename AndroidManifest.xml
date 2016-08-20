@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.luxser.chopsticksOnline"
-    android:versionCode="80"
+    android:versionCode="121"
     android:screenOrientation="portrait"
-    android:versionName="1.0.79" >
+    android:versionName="1.0.120" >
 
     <uses-sdk
         android:screenOrientation="portrait"

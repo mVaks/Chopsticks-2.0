@@ -3,7 +3,9 @@ package com.luxser.chopsticksOnline;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -171,22 +173,36 @@ public class SinglePlayerActivity extends Activity {
     	topYT = (TextView) findViewById(R.id.topYT);
 
 
-    	 Button clr=(Button)findViewById(R.id.button1);
-    	   clr.setOnClickListener(new OnClickListener() {
-
-    	       public void onClick(View v) {
-    	    	   onDestroy();
-    	    	   Intent i = new Intent(SinglePlayerActivity.this, SinglePlayerActivity.class);
-    	    	     startActivity(i);
-    	    	     
-    	           
-    	}
-    	   });
-        		  
         	
        
 
     }
+	public void askForRematch() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setMessage("Do you want a rematch?");
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Sure, rematch!",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                            	onDestroy();
+                  	    	   Intent i = new Intent(SinglePlayerActivity.this, SinglePlayerActivity.class);
+                  	    	     startActivity(i);
+                            }
+                        })
+                .setNegativeButton("No.",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+
+        alertDialogBuilder.show();
+    }
+
 	private Runnable runnable = new Runnable() {
 		   @Override
 		   public void run() {
@@ -209,12 +225,16 @@ public class SinglePlayerActivity extends Activity {
         			topYT.setVisibility(View.VISIBLE);
          	    	bottomYT.setText("You Won");
  		        	topYT.setText("You Lost");
+ 		        	askForRematch();
+ 		        	return;
          	    }
          	    if(ifTopWon()){
          	    	bottomYT.setVisibility(View.VISIBLE);
         			topYT.setVisibility(View.VISIBLE);
          	    	bottomYT.setText("You Lost");
  		        	topYT.setText("You Won");
+ 		        	askForRematch();
+ 		        	return;
          	    }
          	  
        
@@ -2130,7 +2150,7 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-   	 Intent i = new Intent(SinglePlayerActivity.this, TurnOnline.class);
+   	 Intent i = new Intent(SinglePlayerActivity.this, OnlineActivity.class);
 	     startActivity(i);
 	 }
 }
