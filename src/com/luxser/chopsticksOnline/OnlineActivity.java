@@ -106,7 +106,7 @@ public class OnlineActivity extends Activity
     // This is the current match data after being unpersisted.
     // Do not retain references to match data once you have
     // taken an action on the match, such as takeTurn()
-    public SkeletonTurn mTurnData;
+    public ChopsticksTurn mTurnData;
     final static int[] CLICKABLES = {
     	 R.id.button_tutorial,R.id.button_accept_popup_invitation, R.id.button_invite_players,
         R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
@@ -716,7 +716,7 @@ public class OnlineActivity extends Activity
     // UI.
     public void startMatch(TurnBasedMatch match) {
     	justWent = false;
-        mTurnData = new SkeletonTurn();
+        mTurnData = new ChopsticksTurn();
         // Some basic turn data
         mTurnData.topLeft = 1;
         mTurnData.topRight = 1;
@@ -848,18 +848,18 @@ public class OnlineActivity extends Activity
         // OK, it's active. Check on turn status.
         switch (turnStatus) {
             case TurnBasedMatch.MATCH_TURN_STATUS_MY_TURN:
-                mTurnData = SkeletonTurn.unpersist(mMatch.getData());
+                mTurnData = ChopsticksTurn.unpersist(mMatch.getData());
                 setGameplayUI();
                 return;
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
             	showWarning("Please Wait...", "When it is your turn you can play in realtime on the game screen.");
                 // Should return results.
-//            	mTurnData = SkeletonTurn.unpersist(mMatch.getData());
+//            	mTurnData = ChopsticksTurn.unpersist(mMatch.getData());
 //                setGameplayUINotTurn();
                 break;
             case TurnBasedMatch.MATCH_TURN_STATUS_INVITED:
                 showWarning("Good inititative!",
-                        "Still waiting for invitations.\n\nBe patient!");
+                        "Still wsaiting for invitations.\n\nBe patient!");
         }
 
         mTurnData = null;
