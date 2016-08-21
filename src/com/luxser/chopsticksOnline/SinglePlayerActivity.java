@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.PopupMenu;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -17,15 +18,17 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.DragShadowBuilder;
-import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 
 public class SinglePlayerActivity extends Activity {
@@ -68,6 +71,10 @@ public class SinglePlayerActivity extends Activity {
 		 
 		 private boolean isMoving;
 
+		  private InterstitialAd adView;  // The ad
+		  private Handler mHandler;       // Handler to display the ad on the UI thread
+		  private Runnable displayAd;     // Code to execute to perform this operation
+		 private InterstitialAd interstitial;
 	@Override
     //dragging stuff
     //http://www.vogella.com/tutorials/AndroidDragAndDrop/article.html
@@ -174,7 +181,24 @@ public class SinglePlayerActivity extends Activity {
 
 
         	
-       
+    	adView = new InterstitialAd(this);
+        adView.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        adView.setAdListener(new AdListener() {
+            // Implement AdListener
+        });
+        mHandler = new Handler(Looper.getMainLooper());
+        displayAd = new Runnable() {
+          public void run() {  
+            runOnUiThread(new Runnable() { 
+              public void run() { 
+                if (adView.isLoaded()) {
+                  adView.show();
+                }
+              }
+            });
+          }
+        };
+        loadAd();
 
     }
 	public void askForRematch() {
@@ -2150,7 +2174,26 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        displayInterstitial();
    	 Intent i = new Intent(SinglePlayerActivity.this, OnlineActivity.class);
 	     startActivity(i);
 	 }
+	public void onAdClosed() {
+	      loadAd(); // Need to reload the Ad when it is closed.
+	    }
+
+	    void loadAd() {
+	      AdRequest adRequest = new AdRequest.Builder()
+	      //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	     .build();
+
+	      // Load the adView object witht he request
+	      adView.loadAd(adRequest);
+	    }
+
+	    //Call displayInterstitial() once you are ready to display the ad.
+	    public void displayInterstitial() {
+	      mHandler.postDelayed(displayAd, 1);
+	    }
+	  
 }

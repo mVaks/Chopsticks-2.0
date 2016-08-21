@@ -2,6 +2,10 @@ package com.luxser.chopsticksOnline;
 
 
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -9,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.PopupMenu;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -66,6 +71,10 @@ public class MainActivity extends Activity {
 		 
 		 private boolean isMoving;
 
+		  private InterstitialAd adView;  // The ad
+		  private Handler mHandler;       // Handler to display the ad on the UI thread
+		  private Runnable displayAd;     // Code to execute to perform this operation
+		 private InterstitialAd interstitial;
 	@Override
     //dragging stuff
     //http://www.vogella.com/tutorials/AndroidDragAndDrop/article.html
@@ -207,6 +216,24 @@ public class MainActivity extends Activity {
         	};
         	handler.postDelayed(refresher, 100);
        
+        	adView = new InterstitialAd(this);
+            adView.setAdUnitId(getString(R.string.banner_ad_unit_id));
+            adView.setAdListener(new AdListener() {
+                // Implement AdListener
+            });
+            mHandler = new Handler(Looper.getMainLooper());
+            displayAd = new Runnable() {
+              public void run() {  
+                runOnUiThread(new Runnable() { 
+                  public void run() { 
+                    if (adView.isLoaded()) {
+                      adView.show();
+                    }
+                  }
+                });
+              }
+            };
+            loadAd();
 
     }
 	
@@ -1624,8 +1651,25 @@ public class MainActivity extends Activity {
     	overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        displayInterstitial();
     	 Intent i = new Intent(MainActivity.this, OnlineActivity.class);
 	     startActivity(i);
 	 }
-	 
+    public void onAdClosed() {
+	      loadAd(); // Need to reload the Ad when it is closed.
+	    }
+
+	    void loadAd() {
+	      AdRequest adRequest = new AdRequest.Builder()
+	      //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	     .build();
+
+	      // Load the adView object witht he request
+	      adView.loadAd(adRequest);
+	    }
+
+	    //Call displayInterstitial() once you are ready to display the ad.
+	    public void displayInterstitial() {
+	      mHandler.postDelayed(displayAd, 1);
+	    }
 }

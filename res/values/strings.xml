@@ -20,8 +20,8 @@
     <string name="tutorial_two">Players make turn-based moves by either transferring fingers amongst their own hands or attacking and therefore adding their hand\'s value to their opponent\’s hand.</string>
     <string name="tutorial_three">When transferring, the resulting number of fingers will contain the same as at the beginning of your turn.  For example, a player having three fingers on one hand and one on the other may choose to transfer to have two fingers on each hand.</string>
 	<string name="tutorial_four">When attacking, the number of fingers on your "attacking hand" do not change, however your opponents "attacked hand" will be the sum of your hand\'s value and theirs.</string>
-	<string name="tutorial_five">If a players hand sums to a value greater than 4 that hand is "dead" and can no longer be used to attack, however you can "revive" it by transferring fingers.</string>
-    <string name="tutorial_six">You win when your opponent has two dead hands. Do you want to try a match against and A.I.?</string>
+	<string name="tutorial_five">If a player\'s hand sums to a value greater than 4 that hand is "dead" and can no longer be used to attack, however you can "revive" it when transferring fingers.</string>
+    <string name="tutorial_six">You win when your opponent has two dead hands. Do you want to try a match against an A.I.?</string>
 	
     <string name="logout">Play offline single player and multiplayer.</string>
 <string name="game_title">Chopsticks Online!</string>

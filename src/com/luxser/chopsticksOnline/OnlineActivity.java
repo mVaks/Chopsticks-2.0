@@ -200,7 +200,7 @@ public class OnlineActivity extends Activity
         loadAd();
         
         setViewVisibility();
-
+        displayInterstitial();
 
         //mDataView = ((TextView) findViewById(R.id.data_view));
         //mTurnTextView = ((TextView) findViewById(R.id.turn_counter_view));
@@ -449,7 +449,7 @@ public class OnlineActivity extends Activity
     // Update the visibility based on what state we're in.
     public void setViewVisibility() {
     	
-    	displayInterstitial();
+    	
 	
     	cMatch = mMatch;
         boolean isSignedIn = (mGoogleApiClient != null) && (mGoogleApiClient.isConnected());
@@ -2602,6 +2602,24 @@ public void tutorialDialog(String title, String message){
      	    	bottomYT.setText("You Won");
      	    		int temp = PreferenceManager.getDefaultSharedPreferences(this).getInt("myWins", 0);
 		        	createSaved("myWins",temp + 1); 
+		        	switch(temp+1){
+		        	case 5: 
+		        		Games.Achievements.unlock(mGoogleApiClient, "CgkIgvCkx_EZEAIQAQ");
+		        		break;
+		        	case 20:
+		        		Games.Achievements.unlock(mGoogleApiClient, "CgkIgvCkx_EZEAIQAg");
+		        		break;
+		        	case 50:
+		        		Games.Achievements.unlock(mGoogleApiClient, "CgkIgvCkx_EZEAIQAw");
+		        		break;
+		        	case 100:
+		        		Games.Achievements.unlock(mGoogleApiClient, "CgkIgvCkx_EZEAIQBA");
+		        		break;
+		        	case 1000:
+		        		Games.Achievements.unlock(mGoogleApiClient, "CgkIgvCkx_EZEAIQBQ");
+		        		break;
+		        	}
+		        	
 		        	Games.Leaderboards.submitScoreImmediate(mGoogleApiClient, getString(R.string.LEADERBOARD_ID), PreferenceManager.getDefaultSharedPreferences(this).getInt("myWins", 0)).setResultCallback(new myLeaderBoardSubmitScoreCallback());
 		        	Games.TurnBasedMultiplayer.finishMatch(mGoogleApiClient,mMatch.getMatchId()).setResultCallback(
 			                 new ResultCallback<TurnBasedMultiplayer.UpdateMatchResult>() {
