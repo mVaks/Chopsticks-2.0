@@ -21,13 +21,14 @@
     <string name="tutorial_three">When transferring, the resulting number of fingers will contain the same as at the beginning of your turn.  For example, a player having three fingers on one hand and one on the other may choose to transfer to have two fingers on each hand.</string>
 	<string name="tutorial_four">When attacking, the number of fingers on your "attacking hand" do not change, however your opponents "attacked hand" will be the sum of your hand\'s value and theirs.</string>
 	<string name="tutorial_five">If a players hand sums to a value greater than 4 that hand is "dead" and can no longer be used to attack, however you can "revive" it by transferring fingers.</string>
-    <string name="tutorial_six">Do you want to try a match against and A.I.?</string>
+    <string name="tutorial_six">You win when your opponent has two dead hands. Do you want to try a match against and A.I.?</string>
 	
     <string name="logout">Play offline single player and multiplayer.</string>
 <string name="game_title">Chopsticks Online!</string>
 <string name="game_name">Chopsticks!</string>
     <string name="game_blurb">A remake of the classic game of chopsticks!\nPlay online, offline, or single player!\n Can you beat your friends?\nOnly one way to find out!\nTo play online you must sign in with Google.</string>
     <string name="single_player">Single Player</string>
+     <string name="offline">Offline Game</string>
     <string name="tutorial">Instructions</string>
     <string name="banner_ad_unit_id">ca-app-pub-4855453117166877/6239393543</string>
     <string name="single_player_explanation">Get some practice!</string>
@@ -54,7 +55,7 @@
     
     <string name="see_leaderboard">Check your rank on the leaderboards.</string>
     
-        <string name="offline">Offline Multiplayer</string>
+       
     <string name="LEADERBOARD_ID">CgkIgvCkx_EZEAIQBw</string>
     <string name="username">Username</string>
     <string name="password">Password</string>

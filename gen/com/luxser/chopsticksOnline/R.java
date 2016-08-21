@@ -2955,7 +2955,7 @@ containing a value of this type.
          */
         public static final int abc_toolbar_collapse_description=0x7f070030;
         public static final int accept=0x7f070002;
-        public static final int accept_popup_invite=0x7f070070;
+        public static final int accept_popup_invite=0x7f070071;
         public static final int action_settings=0x7f07004c;
         public static final int app_id=0x7f070048;
         public static final int app_misconfigured=0x7f070045;
@@ -2966,7 +2966,7 @@ containing a value of this type.
         /**  Brand name for Google [DO NOT TRANSLATE] 
          */
         public static final int auth_google_play_services_client_google_display_name=0x7f070006;
-        public static final int banner_ad_unit_id=0x7f070062;
+        public static final int banner_ad_unit_id=0x7f070063;
         public static final int cancel=0x7f070091;
         /**  Message of the notification to indicate an active cast display connection.  [CHAR LIMIT=80] NOTE: Same text as msgid="794424023757290105" 
          */
@@ -2978,7 +2978,7 @@ containing a value of this type.
          */
         public static final int cast_notification_disconnect=0x7f07000c;
         public static final int check_games=0x7f070094;
-        public static final int click_me=0x7f070075;
+        public static final int click_me=0x7f070076;
         public static final int client_reconnect_required=0x7f070099;
         /**   Text for notification shown when the Android Wear apps needs to be updated. Only shown on the wearable. [CHAR LIMIT=NONE] 
          */
@@ -3106,7 +3106,7 @@ containing a value of this type.
         public static final int four=0x7f070051;
         public static final int game_blurb=0x7f07005f;
         public static final int game_name=0x7f07005e;
-        public static final int game_problem=0x7f070074;
+        public static final int game_problem=0x7f070075;
         public static final int game_title=0x7f07005d;
         public static final int gamehelper_app_misconfigured=0x7f070041;
         public static final int gamehelper_license_failed=0x7f070042;
@@ -3117,13 +3117,13 @@ containing a value of this type.
         public static final int gcm_message=0x7f070088;
         public static final int gcm_recoverable_error=0x7f07008a;
         public static final int gcm_unregistered=0x7f070087;
-        public static final int instructions=0x7f070073;
+        public static final int instructions=0x7f070074;
         public static final int internal_error=0x7f07009b;
-        public static final int inv_popup_text=0x7f07006b;
-        public static final int invite_players=0x7f070065;
-        public static final int invite_players_explanation=0x7f070069;
-        public static final int is_inviting_you=0x7f070076;
-        public static final int leaderboard=0x7f070067;
+        public static final int inv_popup_text=0x7f07006c;
+        public static final int invite_players=0x7f070066;
+        public static final int invite_players_explanation=0x7f07006a;
+        public static final int is_inviting_you=0x7f070077;
+        public static final int leaderboard=0x7f070068;
         public static final int leave=0x7f070090;
         public static final int license_failed=0x7f070046;
         public static final int logout=0x7f07005c;
@@ -3132,32 +3132,32 @@ containing a value of this type.
         public static final int match_error_locally_modified=0x7f07009e;
         public static final int match_instructions=0x7f07008d;
         public static final int network_error_operation_failed=0x7f07009a;
-        public static final int next=0x7f07006c;
-        public static final int no=0x7f07006f;
-        public static final int offline=0x7f070079;
+        public static final int next=0x7f07006d;
+        public static final int no=0x7f070070;
+        public static final int offline=0x7f070061;
         public static final int one=0x7f07004e;
         public static final int opponent_input=0x7f070080;
         public static final int password=0x7f07007c;
-        public static final int please_wait=0x7f070072;
-        public static final int previous=0x7f07006d;
-        public static final int quick_game=0x7f070064;
-        public static final int quick_game_explanation=0x7f070068;
+        public static final int please_wait=0x7f070073;
+        public static final int previous=0x7f07006e;
+        public static final int quick_game=0x7f070065;
+        public static final int quick_game_explanation=0x7f070069;
         public static final int quick_match=0x7f07008e;
         public static final int register_button=0x7f07007f;
         public static final int reload_button=0x7f070085;
         public static final int rematch_button=0x7f070086;
         public static final int restart=0x7f070054;
         public static final int returnTo=0x7f070055;
-        public static final int see_invitations=0x7f070066;
-        public static final int see_invitations_explanation=0x7f07006a;
-        public static final int see_leaderboard=0x7f070078;
+        public static final int see_invitations=0x7f070067;
+        public static final int see_invitations_explanation=0x7f07006b;
+        public static final int see_leaderboard=0x7f070079;
         public static final int sign_in_failed=0x7f070044;
-        public static final int sign_out=0x7f070071;
+        public static final int sign_out=0x7f070072;
         public static final int sign_out_button=0x7f070083;
         public static final int signin_button=0x7f07007e;
-        public static final int signin_other_error=0x7f070077;
+        public static final int signin_other_error=0x7f070078;
         public static final int single_player=0x7f070060;
-        public static final int single_player_explanation=0x7f070063;
+        public static final int single_player_explanation=0x7f070064;
         public static final int start_match=0x7f070095;
         /**  Text to use when the number in a notification info is too large
          (greater than status_bar_notification_info_maxnum, defined in
@@ -3172,7 +3172,7 @@ containing a value of this type.
         public static final int submit_button=0x7f070084;
         public static final int three=0x7f070050;
         public static final int turn_counter=0x7f070096;
-        public static final int tutorial=0x7f070061;
+        public static final int tutorial=0x7f070062;
         public static final int tutorial_five=0x7f07005a;
         public static final int tutorial_four=0x7f070059;
         public static final int tutorial_one=0x7f070056;
@@ -3191,7 +3191,7 @@ containing a value of this type.
         public static final int wallet_buy_button_place_holder=0x7f07002b;
         public static final int welcome=0x7f070082;
         public static final int welcome_to_our_skeleton_app_=0x7f070093;
-        public static final int yes=0x7f07006e;
+        public static final int yes=0x7f07006f;
         public static final int yourturn=0x7f070053;
         public static final int zero=0x7f070052;
     }

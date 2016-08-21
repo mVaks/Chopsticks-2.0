@@ -828,6 +828,9 @@ public class OnlineActivity extends Activity
                     showWarning(
                             "Complete!",
                             "This game is over; someone finished it, and so did you!  There is nothing to be done.");
+                    for(ImageView views:hands){
+    	        		views.setOnTouchListener(null);
+                    }
                     findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
                     findViewById(R.id.screen_game).setVisibility(View.GONE);	
                     break;
@@ -849,6 +852,7 @@ public class OnlineActivity extends Activity
                 setGameplayUI();
                 return;
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
+            	showWarning("Please Wait...", "When it is your turn you can play in realtime on the game screen.");
                 // Should return results.
 //            	mTurnData = SkeletonTurn.unpersist(mMatch.getData());
 //                setGameplayUINotTurn();
@@ -1195,6 +1199,7 @@ public class OnlineActivity extends Activity
             	stopKeepingScreenOn();
             		createSaved("matchid", "");
             		justWent = false;
+            		displayInterstitial();
             		findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
                     findViewById(R.id.screen_game).setVisibility(View.GONE); 
             	break;
@@ -1221,6 +1226,9 @@ public class OnlineActivity extends Activity
     private String tutorialTitle;
     private int tutorialPage;
 public void tutorialDialog(String title, String message){
+		if(tutorialPage <= 0){
+			return;
+		}
 	 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
      // set title
@@ -1261,6 +1269,7 @@ public void tutorialDialog(String title, String message){
           		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_five));
             	 	break;
              case 6: 
+            	 tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_six));
             	 	break;
             
              }
