@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.DragEvent;
@@ -26,6 +27,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -41,7 +45,6 @@ import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 import com.google.example.games.basegameutils.BaseGameUtils;
-
 
 /**
  * TBMPSkeleton: A minimalistic "game" that shows turn-based
@@ -105,7 +108,7 @@ public class OnlineActivity extends Activity
     // taken an action on the match, such as takeTurn()
     public SkeletonTurn mTurnData;
     final static int[] CLICKABLES = {
-    	 R.id.button_tutorial,R.id.next_one, R.id.previous_two, R.id.next_two, R.id.previous_three, R.id.next_three,R.id.previous_four, R.id.next_four,R.id.previous_five, R.id.next_five,R.id.next_six, R.id.no,R.id.button_accept_popup_invitation, R.id.button_invite_players,
+    	 R.id.button_tutorial,R.id.button_accept_popup_invitation, R.id.button_invite_players,
         R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
         R.id.button_sign_out, R.id.button_offline, R.id.button_single_player, R.id.button1, R.id.button_leaderboard
 };
@@ -145,8 +148,10 @@ public class OnlineActivity extends Activity
 	 private TextView topYT;
 	 
 	 private boolean isMoving;
-	 
-
+	  private InterstitialAd adView;  // The ad
+	  private Handler mHandler;       // Handler to display the ad on the UI thread
+	  private Runnable displayAd;     // Code to execute to perform this operation
+	 private InterstitialAd interstitial;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,11 +179,52 @@ public class OnlineActivity extends Activity
         for (int id : CLICKABLES) {
           findViewById(id).setOnClickListener(this);
         }
+        
+        adView = new InterstitialAd(this);
+        adView.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        adView.setAdListener(new AdListener() {
+            // Implement AdListener
+        });
+        mHandler = new Handler(Looper.getMainLooper());
+        displayAd = new Runnable() {
+          public void run() {  
+            runOnUiThread(new Runnable() { 
+              public void run() { 
+                if (adView.isLoaded()) {
+                  adView.show();
+                }
+              }
+            });
+          }
+        };
+        loadAd();
+        
         setViewVisibility();
+
+
         //mDataView = ((TextView) findViewById(R.id.data_view));
         //mTurnTextView = ((TextView) findViewById(R.id.turn_counter_view));
+        
     }
-    
+
+    public void onAdClosed() {
+      loadAd(); // Need to reload the Ad when it is closed.
+    }
+
+    void loadAd() {
+      AdRequest adRequest = new AdRequest.Builder()
+      //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+     .build();
+
+      // Load the adView object witht he request
+      adView.loadAd(adRequest);
+    }
+
+    //Call displayInterstitial() once you are ready to display the ad.
+    public void displayInterstitial() {
+      mHandler.postDelayed(displayAd, 1);
+    }
+  
 
     @Override
     protected void onStart() {
@@ -396,10 +442,15 @@ public class OnlineActivity extends Activity
 //    }
 
     // Sign-in, Sign out behavior
+	
+	
 
+   
     // Update the visibility based on what state we're in.
     public void setViewVisibility() {
-    
+    	
+    	displayInterstitial();
+	
     	cMatch = mMatch;
         boolean isSignedIn = (mGoogleApiClient != null) && (mGoogleApiClient.isConnected());
 
@@ -1156,66 +1207,104 @@ public class OnlineActivity extends Activity
             			 getString(R.string.LEADERBOARD_ID)), 1337);
             	break;
             case R.id.button_tutorial:
-            	findViewById(R.id.tutorial_one).setVisibility(View.VISIBLE);
-        		findViewById(R.id.screen_sign_in).setVisibility(View.GONE);
+            	tutorialPage = 1;
+            	tutorialTitle = "Tutorial Page: ";
+            	tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_one));
             	break;
-            case R.id.next_one:
-            	findViewById(R.id.tutorial_one).setVisibility(View.GONE);
-        		findViewById(R.id.tutorial_two).setVisibility(View.VISIBLE);
-            	break;
-            case R.id.next_two:
-            	findViewById(R.id.tutorial_two).setVisibility(View.GONE);
-        		findViewById(R.id.tutorial_three).setVisibility(View.VISIBLE);
-            	break;
-            case R.id.previous_two:
-            	findViewById(R.id.tutorial_one).setVisibility(View.VISIBLE);
-        		findViewById(R.id.tutorial_two).setVisibility(View.GONE);
-            	break;
-            case R.id.next_three:
-            	findViewById(R.id.tutorial_three).setVisibility(View.GONE);
-        		findViewById(R.id.tutorial_four).setVisibility(View.VISIBLE);
-            	break;
-            case R.id.previous_three:
-            	findViewById(R.id.tutorial_two).setVisibility(View.VISIBLE);
-        		findViewById(R.id.tutorial_three).setVisibility(View.GONE);
-            	break;
-            case R.id.next_four:
-            	findViewById(R.id.tutorial_four).setVisibility(View.GONE);
-        		findViewById(R.id.tutorial_five).setVisibility(View.VISIBLE);
-            	break;
-            case R.id.previous_four:
-            	findViewById(R.id.tutorial_three).setVisibility(View.VISIBLE);
-        		findViewById(R.id.tutorial_four).setVisibility(View.GONE);
-            	break;
-            case R.id.next_five:
-            	findViewById(R.id.tutorial_five).setVisibility(View.GONE);
-        		findViewById(R.id.tutorial_six).setVisibility(View.VISIBLE);
-            	break;
-            case R.id.previous_five:
-            	findViewById(R.id.tutorial_four).setVisibility(View.VISIBLE);
-        		findViewById(R.id.tutorial_five).setVisibility(View.GONE);
-            	break;
-            case R.id.next_six:
-            	intent =  new Intent(OnlineActivity.this, SinglePlayerActivity.class);
-        		startActivity(intent);
-            	break;
-            case R.id.no:
-            	findViewById(R.id.tutorial_six).setVisibility(View.GONE);
-        		findViewById(R.id.screen_sign_in).setVisibility(View.VISIBLE);
-            	break;
-            	
+          
             	
             	
              }
 
              
     }
+    private String tutorialTitle;
+    private int tutorialPage;
+public void tutorialDialog(String title, String message){
+	 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+     // set title
+     alertDialogBuilder.setTitle(title).setMessage(message);
+     
+     // set dialog message
+     if(tutorialPage == 6){
+    	 alertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int which) { 
+            	 Intent intent = new Intent(OnlineActivity.this, SinglePlayerActivity.class);
+            	 startActivity(intent);
+             }
+    	 });
+    	 alertDialogBuilder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int which) { 
+            	 return;
+             }
+    	 });
+     }
+     else{
+     alertDialogBuilder.setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
+         public void onClick(DialogInterface dialog, int which) { 
+        	 tutorialPage++;
+             switch(tutorialPage){
+             case 1:
+             		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_one));
+            	 	break;
+             case 2:
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_two));
+            	 	break;
+             case 3:
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_three));
+            	 	break;
+             case 4: 
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_four));
+            	 	break;
+             case 5:
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_five));
+            	 	break;
+             case 6: 
+            	 	break;
+            
+             }
+         }
+      });
+     alertDialogBuilder.setNegativeButton(R.string.previous, new DialogInterface.OnClickListener() {
+         public void onClick(DialogInterface dialog, int which) { 
+        	 tutorialPage--;
+             switch(tutorialPage){
+             case 0:
+                    dialog.cancel();
+             case 1:
+             		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_one));
+            	 	break;
+             case 2:
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_two));
+            	 	break;
+             case 3:
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_three));
+            	 	break;
+             case 4: 
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_four));
+            	 	break;
+             case 5:
+          		tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_five));
+            	 	break;
+             case 6: 
+            	 	break;
+            
+             }
+         }
+      });
+     }
+     // create alert dialog
+     alertDialogBuilder.setIcon(R.drawable.ic_launcher);
+
+     mAlertDialog = alertDialogBuilder.create();
+
+     // show it
+     mAlertDialog.show();
+}
     
     public void onBackPressed(){
-    	if(findViewById(R.id.tutorial_one).getVisibility() == View.VISIBLE){
-    		findViewById(R.id.tutorial_one).setVisibility(View.GONE);
-    		findViewById(R.id.screen_sign_in).setVisibility(View.VISIBLE);
-    	}
+    	
     	
 	 }
     private final class MyTouchListener implements OnTouchListener {

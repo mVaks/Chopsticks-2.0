@@ -571,7 +571,7 @@ public final class R {
 		public static final int powered_by_google_light = 0x7f020091;
 	}
 	public static final class id {
-		public static final int action0 = 0x7f08008e;
+		public static final int action0 = 0x7f080091;
 		public static final int action_bar = 0x7f08005e;
 		public static final int action_bar_activity_content = 0x7f080038;
 		public static final int action_bar_container = 0x7f08005d;
@@ -580,7 +580,7 @@ public final class R {
 		public static final int action_bar_subtitle = 0x7f08003f;
 		public static final int action_bar_title = 0x7f08003e;
 		public static final int action_context_bar = 0x7f08005f;
-		public static final int action_divider = 0x7f080092;
+		public static final int action_divider = 0x7f080095;
 		public static final int action_menu_divider = 0x7f08003a;
 		public static final int action_menu_presenter = 0x7f08003b;
 		public static final int action_mode_bar = 0x7f08005b;
@@ -598,10 +598,10 @@ public final class R {
 		public static final int buy_now = 0x7f080016;
 		public static final int buy_with = 0x7f080012;
 		public static final int buy_with_google = 0x7f080015;
-		public static final int cancel_action = 0x7f08008f;
+		public static final int cancel_action = 0x7f080092;
 		public static final int cast_notification_id = 0x7f080000;
 		public static final int checkbox = 0x7f080056;
-		public static final int chronometer = 0x7f080095;
+		public static final int chronometer = 0x7f080098;
 		public static final int classic = 0x7f08001c;
 		public static final int collapseActionView = 0x7f080031;
 		public static final int contentPanel = 0x7f08004e;
@@ -614,7 +614,7 @@ public final class R {
 		public static final int donate_with_google = 0x7f080018;
 		public static final int edit_query = 0x7f080060;
 		public static final int end = 0x7f080034;
-		public static final int end_padder = 0x7f08009a;
+		public static final int end_padder = 0x7f08009d;
 		public static final int expand_activities_button = 0x7f080042;
 		public static final int expanded_menu = 0x7f080055;
 		public static final int google_wallet_classic = 0x7f080019;
@@ -629,14 +629,14 @@ public final class R {
 		public static final int icon = 0x7f080046;
 		public static final int ifRoom = 0x7f08002e;
 		public static final int image = 0x7f080043;
-		public static final int info = 0x7f080099;
-		public static final int line1 = 0x7f080093;
-		public static final int line3 = 0x7f080097;
+		public static final int info = 0x7f08009c;
+		public static final int line1 = 0x7f080096;
+		public static final int line3 = 0x7f08009a;
 		public static final int listMode = 0x7f080020;
 		public static final int list_item = 0x7f080045;
 		public static final int logo_only = 0x7f080013;
 		public static final int match_parent = 0x7f080010;
-		public static final int media_actions = 0x7f080091;
+		public static final int media_actions = 0x7f080094;
 		public static final int middle = 0x7f080033;
 		public static final int monochrome = 0x7f08001e;
 		public static final int multiply = 0x7f08002b;
@@ -676,16 +676,16 @@ public final class R {
 		public static final int src_atop = 0x7f08002a;
 		public static final int src_in = 0x7f080029;
 		public static final int src_over = 0x7f080028;
-		public static final int status_bar_latest_event_content = 0x7f080090;
+		public static final int status_bar_latest_event_content = 0x7f080093;
 		public static final int strict_sandbox = 0x7f08000d;
 		public static final int submit_area = 0x7f080069;
 		public static final int tabMode = 0x7f080021;
 		public static final int terrain = 0x7f080006;
 		public static final int test = 0x7f08000b;
-		public static final int text = 0x7f080098;
-		public static final int text2 = 0x7f080096;
+		public static final int text = 0x7f08009b;
+		public static final int text2 = 0x7f080099;
 		public static final int textSpacerNoButtons = 0x7f080051;
-		public static final int time = 0x7f080094;
+		public static final int time = 0x7f080097;
 		public static final int title = 0x7f080047;
 		public static final int title_template = 0x7f08004c;
 		public static final int topPanel = 0x7f08004b;
@@ -728,18 +728,18 @@ public final class R {
 		public static final int abc_search_dropdown_item_icons_2line = 0x7f030016;
 		public static final int abc_search_view = 0x7f030017;
 		public static final int abc_select_dialog_material = 0x7f030018;
-		public static final int notification_media_action = 0x7f03001c;
-		public static final int notification_media_cancel_action = 0x7f03001d;
-		public static final int notification_template_big_media = 0x7f03001e;
-		public static final int notification_template_big_media_narrow = 0x7f03001f;
-		public static final int notification_template_lines = 0x7f030020;
-		public static final int notification_template_media = 0x7f030021;
-		public static final int notification_template_part_chronometer = 0x7f030022;
-		public static final int notification_template_part_time = 0x7f030023;
-		public static final int select_dialog_item_material = 0x7f030025;
-		public static final int select_dialog_multichoice_material = 0x7f030026;
-		public static final int select_dialog_singlechoice_material = 0x7f030027;
-		public static final int support_simple_spinner_dropdown_item = 0x7f030029;
+		public static final int notification_media_action = 0x7f03001d;
+		public static final int notification_media_cancel_action = 0x7f03001e;
+		public static final int notification_template_big_media = 0x7f03001f;
+		public static final int notification_template_big_media_narrow = 0x7f030020;
+		public static final int notification_template_lines = 0x7f030021;
+		public static final int notification_template_media = 0x7f030022;
+		public static final int notification_template_part_chronometer = 0x7f030023;
+		public static final int notification_template_part_time = 0x7f030024;
+		public static final int select_dialog_item_material = 0x7f030026;
+		public static final int select_dialog_multichoice_material = 0x7f030027;
+		public static final int select_dialog_singlechoice_material = 0x7f030028;
+		public static final int support_simple_spinner_dropdown_item = 0x7f03002a;
 	}
 	public static final class raw {
 		public static final int gtm_analytics = 0x7f050000;

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.luxser.chopsticksOnline"
-    android:versionCode="121"
+    android:versionCode="132"
     android:screenOrientation="portrait"
-    android:versionName="1.0.120" >
+    android:versionName="1.0.131" >
 
     <uses-sdk
         android:screenOrientation="portrait"
         android:minSdkVersion="15"
         android:targetSdkVersion="23" />
-
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         
         android:screenOrientation="portrait"
@@ -22,7 +23,10 @@
             android:value="@string/app_id"/>
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-  
+        
+   <activity android:name="com.google.android.gms.ads.AdActivity" 
+       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        
         <activity
             android:screenOrientation="portrait"
             android:name=".SinglePlayerActivity"
