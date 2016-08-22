@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -190,9 +191,8 @@ public class MainActivity extends Activity {
         
         bottomYT = (TextView) findViewById(R.id.bottomYT);
     	topYT = (TextView) findViewById(R.id.topYT);
-
     	
-      		  
+
       	
     	
          final Handler handler = new Handler();
@@ -1672,4 +1672,11 @@ public class MainActivity extends Activity {
 	    public void displayInterstitial() {
 	      mHandler.postDelayed(displayAd, 1);
 	    }
+	    
+	    public void onDestroy() {
+
+	    	   super.onDestroy();
+	    	 
+	    	       	
+	    	 }
 }

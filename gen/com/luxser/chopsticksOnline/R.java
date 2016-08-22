@@ -2875,7 +2875,9 @@ containing a value of this type.
         public static final int main=0x7f0d0001;
     }
     public static final class raw {
-        public static final int gtm_analytics=0x7f050000;
+        public static final int clap=0x7f050000;
+        public static final int gtm_analytics=0x7f050001;
+        public static final int sad=0x7f050002;
     }
     public static final class string {
         public static final int LEADERBOARD_ID=0x7f08007a;

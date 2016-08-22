@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -174,7 +175,9 @@ public class OnlineActivity extends Activity
                 .build();
 
         createSaved("matchid", "");
-        
+          
+          mpclap = MediaPlayer.create(this, R.raw.clap);
+          mpsad = MediaPlayer.create(this, R.raw.sad);
         // set up a click listener for everything we care about
         for (int id : CLICKABLES) {
           findViewById(id).setOnClickListener(this);
@@ -243,13 +246,25 @@ public class OnlineActivity extends Activity
     protected void onStop() {
     	createSaved("matchid", "");
     	stopKeepingScreenOn();
+    	if(mpclap!=null){
+    	mpclap.stop();
+   	 mpclap.release();
+    	}
+    	if(mpsad!=null){
+   	 mpsad.stop();
+   	 mpsad.release();
+    	}
         super.onStop();
         Log.d(TAG, "onStop(): Disconnecting from Google APIs");
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
-  
+    @Override
+    protected void onPause(){
+        super.onPause();
+        
+    }
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -445,7 +460,7 @@ public class OnlineActivity extends Activity
 	
 	
 
-   
+   private boolean justSignedIn = false;
     // Update the visibility based on what state we're in.
     public void setViewVisibility() {
     	
@@ -466,7 +481,13 @@ public class OnlineActivity extends Activity
             return;
         }
 
-
+        if(justSignedIn){
+        	 justSignedIn = false;
+        	 findViewById(R.id.screen_sign_in).setVisibility(View.GONE);
+        	 findViewById(R.id.screen_game).setVisibility(View.GONE);
+             findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
+             return;
+        }
         //((TextView) findViewById(R.id.name_field)).setText(Games.Players.getCurrentPlayer(
            //     mGoogleApiClient).getDisplayName());
         findViewById(R.id.screen_sign_in).setVisibility(View.GONE);
@@ -497,7 +518,18 @@ public class OnlineActivity extends Activity
     		views.setVisibility(View.GONE);
     	}
     }
+    private MediaPlayer mpclap;
+    private MediaPlayer mpsad;
+
+    private void stopPlaying(MediaPlayer mp) {
+        if (mp != null) {
+            mp.stop();
+            mp.release();
+       }
+    }
     public void setGameplayUI() {
+       
+        
     	dismissSpinner();
     	justWent = false;
         isDoingTurn = true;
@@ -825,6 +857,8 @@ public class OnlineActivity extends Activity
                 return;
             case TurnBasedMatch.MATCH_STATUS_COMPLETE:
                 if (turnStatus == TurnBasedMatch.MATCH_TURN_STATUS_COMPLETE) {
+                    mpsad = MediaPlayer.create(this, R.raw.sad);
+                	mpsad.start();
                     showWarning(
                             "Complete!",
                             "This game is over; someone finished it, and so did you!  There is nothing to be done.");
@@ -832,7 +866,9 @@ public class OnlineActivity extends Activity
     	        		views.setOnTouchListener(null);
                     }
                     findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
-                    findViewById(R.id.screen_game).setVisibility(View.GONE);	
+                    findViewById(R.id.screen_game).setVisibility(View.GONE);
+                    if(mpsad!=null)
+                    mpsad.stop();
                     break;
                 }
 
@@ -840,6 +876,10 @@ public class OnlineActivity extends Activity
                 // so we allow this to continue.
                 showWarning("Complete!",
                         "This game is over; someone finished it!  You can only finish it now.");
+               
+                
+               
+                
                 findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
                 findViewById(R.id.screen_game).setVisibility(View.GONE);
         }
@@ -852,6 +892,7 @@ public class OnlineActivity extends Activity
                 setGameplayUI();
                 return;
             case TurnBasedMatch.MATCH_TURN_STATUS_THEIR_TURN:
+            	if((findViewById(R.id.screen_game)).getVisibility() != View.VISIBLE)
             	showWarning("Please Wait...", "When it is your turn you can play in realtime on the game screen.");
                 // Should return results.
 //            	mTurnData = ChopsticksTurn.unpersist(mMatch.getData());
@@ -1133,6 +1174,7 @@ public class OnlineActivity extends Activity
         		startActivity(intent);
         		break;
             case R.id.button_sign_in:
+            	justSignedIn = true;
                 // Check to see the developer who's running this sample code read the instructions :-)
                 // NOTE: this check is here only because this is a sample! Don't include this
                 // check in your actual production app.
@@ -1196,6 +1238,12 @@ public class OnlineActivity extends Activity
                 Games.TurnBasedMultiplayer.createMatch(mGoogleApiClient, tbmc).setResultCallback(cb);
             	break;
             case R.id.button1:
+            
+            	stopPlaying(mpclap);
+            	mpclap = null;
+            	stopPlaying(mpsad);
+            	mpsad = null;
+                isDoingTurn = false;
             	stopKeepingScreenOn();
             		createSaved("matchid", "");
             		justWent = false;
@@ -2575,6 +2623,7 @@ public void tutorialDialog(String title, String message){
 	  	}
 	    }
 	    public void turnFinished(){
+	    	 
 	    	 for(ImageView views:hands){
 	        		views.setOnTouchListener(null);
 	    	 }
@@ -2598,6 +2647,9 @@ public void tutorialDialog(String title, String message){
 	     		mGoogleApiClient.reconnect();
 	     	}
 	         if(ifBottomWon()){
+	        	 mpclap = MediaPlayer.create(this, R.raw.clap);
+	            
+	            	mpclap.start();
 		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
      	    	bottomYT.setText("You Won");
      	    		int temp = PreferenceManager.getDefaultSharedPreferences(this).getInt("myWins", 0);
@@ -2934,4 +2986,20 @@ public void tutorialDialog(String title, String message){
 	        }
 	    }
 	}
+   public void onDestroy() {
+		if(mpclap!=null){
+	       	mpclap.stop();
+	       	mpclap.release();
+	       	}
+	       	if(mpsad!=null){
+	       		mpsad.stop();
+	       		mpsad.release();
+	       	}
+	        
+	       mpclap = null;
+	       mpsad = null;
+	   super.onDestroy();
+	  
+       
+	 }
 }

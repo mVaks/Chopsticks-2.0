@@ -7,10 +7,12 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,6 +77,7 @@ public class SinglePlayerActivity extends Activity {
 		  private Handler mHandler;       // Handler to display the ad on the UI thread
 		  private Runnable displayAd;     // Code to execute to perform this operation
 		 private InterstitialAd interstitial;
+		 
 	@Override
     //dragging stuff
     //http://www.vogella.com/tutorials/AndroidDragAndDrop/article.html
@@ -178,7 +181,10 @@ public class SinglePlayerActivity extends Activity {
         
         bottomYT = (TextView) findViewById(R.id.bottomYT);
     	topYT = (TextView) findViewById(R.id.topYT);
-
+         mpclap = MediaPlayer.create(this, R.raw.clap);
+         mpsad = MediaPlayer.create(this, R.raw.sad);
+         
+  
 
         	
     	adView = new InterstitialAd(this);
@@ -249,6 +255,8 @@ public class SinglePlayerActivity extends Activity {
         			topYT.setVisibility(View.VISIBLE);
          	    	bottomYT.setText("You Won");
  		        	topYT.setText("You Lost");
+ 		        	reCreateMedia();
+ 		        	mpclap.start();
  		        	askForRematch();
  		        	return;
          	    }
@@ -257,6 +265,8 @@ public class SinglePlayerActivity extends Activity {
         			topYT.setVisibility(View.VISIBLE);
          	    	bottomYT.setText("You Lost");
  		        	topYT.setText("You Won");
+ 		        	reCreateMedia();
+ 		        	mpsad.start();
  		        	askForRematch();
  		        	return;
          	    }
@@ -266,7 +276,10 @@ public class SinglePlayerActivity extends Activity {
 		      handler.postDelayed(this, 1500);          // reschedule the handler
 		   }
 		};
-
+public void reCreateMedia(){
+	 mpclap = MediaPlayer.create(this, R.raw.clap);
+      mpsad = MediaPlayer.create(this, R.raw.sad);
+}
 	private void findInvisible(){
 		if (oneTopRight.getVisibility() == View.INVISIBLE){
 			oneTopRight.setVisibility(View.VISIBLE);
@@ -2195,5 +2208,37 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 	    public void displayInterstitial() {
 	      mHandler.postDelayed(displayAd, 1);
 	    }
-	  
+	    private MediaPlayer mpclap;
+	    private MediaPlayer mpsad;
+	    public void onDestroy() {
+	    	if(mpclap!= null || mpclap.isPlaying() == true){
+    	       	mpclap.stop();
+    	       	mpclap.release();
+    	       	}
+    	       	if(mpsad!= null || mpsad.isPlaying() == true){
+    	       		
+    	       		mpsad.stop();
+    	       		mpsad.release();
+    	       	}
+    	       	mpclap = null;
+    	       	mpsad = null;
+	    	   super.onDestroy();
+	    	 	
+	    	       	
+	    	 }
+
+	    @Override
+	    protected void onStop() {
+	    	if(mpclap!=null){
+	    	 mpclap.stop();
+	    	 mpclap.release();
+	    	}
+	    	if(mpsad!=null){
+	    	 mpsad.stop();
+	    	 mpsad.release();
+	    	}
+	    	
+	        super.onStop();
+	       
+	    }
 }
