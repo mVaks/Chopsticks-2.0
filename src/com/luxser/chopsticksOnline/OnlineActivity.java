@@ -247,12 +247,22 @@ public class OnlineActivity extends Activity
     	createSaved("matchid", "");
     	stopKeepingScreenOn();
     	if(mpclap!=null){
+    		try{
     	mpclap.stop();
    	 mpclap.release();
     	}
+    		catch(Exception e){
+    			
+    		}
+    	}
     	if(mpsad!=null){
+    		try{
    	 mpsad.stop();
    	 mpsad.release();
+    	}
+    	catch(Exception e){
+			
+		}
     	}
         super.onStop();
         Log.d(TAG, "onStop(): Disconnecting from Google APIs");

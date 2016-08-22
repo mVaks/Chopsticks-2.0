@@ -72,7 +72,8 @@ public class SinglePlayerActivity extends Activity {
 		 private TextView topYT;
 		 
 		 private boolean isMoving;
-
+		 private MediaPlayer mpclap;
+		    private MediaPlayer mpsad;
 		  private InterstitialAd adView;  // The ad
 		  private Handler mHandler;       // Handler to display the ad on the UI thread
 		  private Runnable displayAd;     // Code to execute to perform this operation
@@ -180,10 +181,10 @@ public class SinglePlayerActivity extends Activity {
         bottomRight.setOnDragListener(new MyDragListener());
         
         bottomYT = (TextView) findViewById(R.id.bottomYT);
-    	topYT = (TextView) findViewById(R.id.topYT);
+    	//topYT = (TextView) findViewById(R.id.//topYT);
          mpclap = MediaPlayer.create(this, R.raw.clap);
          mpsad = MediaPlayer.create(this, R.raw.sad);
-         
+         inaskDialog = false;
   
 
         	
@@ -207,7 +208,9 @@ public class SinglePlayerActivity extends Activity {
         loadAd();
 
     }
+	public boolean inaskDialog = false;
 	public void askForRematch() {
+		inaskDialog = true;
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         alertDialogBuilder.setMessage("Do you want a rematch?");
@@ -227,6 +230,7 @@ public class SinglePlayerActivity extends Activity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                            	inaskDialog = false;
                             }
                         });
 
@@ -239,11 +243,13 @@ public class SinglePlayerActivity extends Activity {
 
 			  if(isBottomTurn && aiJustWent){
 				  findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
-		          findViewById(R.id.topYT).setVisibility(View.GONE);
+       	    	  bottomYT.setText("Your Turn");
+		          //findViewById(R.id.topYT).setVisibility(View.GONE);
 			  }
 			  else if(!isBottomTurn && !aiJustWent){
-				  findViewById(R.id.bottomYT).setVisibility(View.GONE);
-		          findViewById(R.id.topYT).setVisibility(View.VISIBLE);
+				  //findViewById(R.id.bottomYT).setVisibility(View.GONE);
+       	    	  bottomYT.setText("Waiting...");
+		          //findViewById(R.id.topYT).setVisibility(View.VISIBLE);
 			  }
 			   if(!isMoving)
 			   findInvisible();
@@ -252,9 +258,9 @@ public class SinglePlayerActivity extends Activity {
          	    }
          	    if(ifBottomWon()){
          	    	bottomYT.setVisibility(View.VISIBLE);
-        			topYT.setVisibility(View.VISIBLE);
+        			//topYT.setVisibility(View.VISIBLE);
          	    	bottomYT.setText("You Won");
- 		        	topYT.setText("You Lost");
+ 		        	//topYT.setText("You Lost");
  		        	reCreateMedia();
  		        	mpclap.start();
  		        	askForRematch();
@@ -262,9 +268,9 @@ public class SinglePlayerActivity extends Activity {
          	    }
          	    if(ifTopWon()){
          	    	bottomYT.setVisibility(View.VISIBLE);
-        			topYT.setVisibility(View.VISIBLE);
+        			//topYT.setVisibility(View.VISIBLE);
          	    	bottomYT.setText("You Lost");
- 		        	topYT.setText("You Won");
+ 		        	//topYT.setText("You Won");
  		        	reCreateMedia();
  		        	mpsad.start();
  		        	askForRematch();
@@ -504,23 +510,26 @@ public void reCreateMedia(){
 		        view.setVisibility(View.VISIBLE);
 		        if (isBottomTurn){
 		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
-		        	findViewById(R.id.topYT).setVisibility(View.GONE);
+	       	    	  bottomYT.setText("Your Turn");
+
+		        	//findViewById(R.id.//topYT).setVisibility(View.GONE);
 		        }
 		        else if (!isBottomTurn){
-		        	findViewById(R.id.topYT).setVisibility(View.VISIBLE);
-		        	findViewById(R.id.bottomYT).setVisibility(View.GONE);
+		        	//findViewById(R.id.//topYT).setVisibility(View.VISIBLE);
+		        	//findViewById(R.id.bottomYT).setVisibility(View.GONE);
+	       	    	  bottomYT.setText("Waiting...");
 		        }
 		        if(ifBottomWon()){
-		        	findViewById(R.id.topYT).setVisibility(View.VISIBLE);
+		        	//findViewById(R.id.topYT).setVisibility(View.VISIBLE);
 		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
         	    	bottomYT.setText("You Won");
-		        	topYT.setText("You Lost");
+		        	//topYT.setText("You Lost");
         	    }
 		        else if(ifTopWon()){
-		        	findViewById(R.id.topYT).setVisibility(View.VISIBLE);
+		        	//findViewById(R.id.topYT).setVisibility(View.VISIBLE);
 		        	findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
         	    	bottomYT.setText("You Lost");
-		        	topYT.setText("You Won");
+		        	//topYT.setText("You Won");
         	    }
         	    	
 		      default:
@@ -1583,17 +1592,17 @@ public void reCreateMedia(){
     		
     		if(ifBottomWon()){
     			bottomYT.setVisibility(View.VISIBLE);
-    			topYT.setVisibility(View.VISIBLE);
+    			////topYT.setVisibility(View.VISIBLE);
   	    	bottomYT.setText("You Won");
-	        	topYT.setText("You Lost");
+	        	////topYT.setText("You Lost");
 	        	onPause();
 	        	return;
     		}
     		if(ifTopWon()){
     			bottomYT.setVisibility(View.VISIBLE);
-    			topYT.setVisibility(View.VISIBLE);
+    			//topYT.setVisibility(View.VISIBLE);
     			bottomYT.setText("You Lost");
-    			topYT.setText("You Won");
+    			//topYT.setText("You Won");
     			onPause();
     			return;
     		}
@@ -1840,11 +1849,14 @@ public void reCreateMedia(){
     		
     		  if(isBottomTurn){
     			  findViewById(R.id.bottomYT).setVisibility(View.VISIBLE);
-    	          findViewById(R.id.topYT).setVisibility(View.GONE);
+       	    	  bottomYT.setText("Your Turn");
+
+    	         // findViewById(R.id.topYT).setVisibility(View.GONE);
     		  }
     		  else if(!isBottomTurn){
-    			  findViewById(R.id.bottomYT).setVisibility(View.GONE);
-    	          findViewById(R.id.topYT).setVisibility(View.VISIBLE);
+    			  //findViewById(R.id.bottomYT).setVisibility(View.GONE);
+    	         // findViewById(R.id.topYT).setVisibility(View.VISIBLE);
+       	    	  bottomYT.setText("Waiting...");
     		  }
         	}
     	if (changedState(sum1,sum2,sum3,sum4)){
@@ -2208,14 +2220,13 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 	    public void displayInterstitial() {
 	      mHandler.postDelayed(displayAd, 1);
 	    }
-	    private MediaPlayer mpclap;
-	    private MediaPlayer mpsad;
+	    
 	    public void onDestroy() {
-	    	if(mpclap!= null || mpclap.isPlaying() == true){
+	    	if(mpclap!= null && mpclap.isPlaying() == true){
     	       	mpclap.stop();
     	       	mpclap.release();
     	       	}
-    	       	if(mpsad!= null || mpsad.isPlaying() == true){
+    	       	if(mpsad!= null && mpsad.isPlaying() == true){
     	       		
     	       		mpsad.stop();
     	       		mpsad.release();
@@ -2227,8 +2238,9 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 	    	       	
 	    	 }
 
+	    
 	    @Override
-	    protected void onStop() {
+	    protected void onPause() {
 	    	if(mpclap!=null){
 	    	 mpclap.stop();
 	    	 mpclap.release();
@@ -2236,6 +2248,39 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 	    	if(mpsad!=null){
 	    	 mpsad.stop();
 	    	 mpsad.release();
+	    	}
+	    	
+	        super.onPause();
+	       
+	    }
+	    @Override
+	    protected void onResume(){
+	        reCreateMedia();
+	        //if(inaskDialog)
+	        	//askForRematch();
+	        
+	        super.onResume();
+	    }
+	    
+	    @Override
+	    protected void onStop() {
+	    	if(mpclap!=null){
+	    		try{
+	    	 mpclap.stop();
+	    	 mpclap.release();
+	    	}
+	    		catch(Exception e){
+	    		       Log.d("Stop", e.toString());
+	    		}
+	    	}
+	    	if(mpsad!=null){
+	    		try{
+	    	 mpsad.stop();
+	    	 mpsad.release();
+	    		}
+	    		catch(Exception e){
+	    		       Log.d("Stop", e.toString());
+	    		}
 	    	}
 	    	
 	        super.onStop();
