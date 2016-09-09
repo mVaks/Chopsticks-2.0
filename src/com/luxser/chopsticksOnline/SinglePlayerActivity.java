@@ -95,7 +95,6 @@ public class SinglePlayerActivity extends Activity {
     	handler = new Handler();     // new handler
         handler.postDelayed(runnable, 1000);   // 10 mins int.
         setContentView(R.layout.activity_fullscreen);
-        
         isBottomTurn = true;
          bottomLeft = (LinearLayout) findViewById(R.id.bottomleft);
     	bottomRight = (LinearLayout) findViewById(R.id.bottomright);

@@ -212,7 +212,11 @@ public class OnlineActivity extends Activity
 
     public void onAdClosed() {
       loadAd(); // Need to reload the Ad when it is closed.
-    }
+      if(!mGoogleApiClient.isConnected()){
+    	  if(mSignInClicked)
+    	  mGoogleApiClient.reconnect();
+    	  }
+      }
 
     void loadAd() {
       AdRequest adRequest = new AdRequest.Builder()
@@ -236,10 +240,23 @@ public class OnlineActivity extends Activity
         //mGoogleApiClient.connect();
     }
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        super.onResume();
+        if(mSignInClicked){
+        	if(!mGoogleApiClient.isConnected()){
+        		mGoogleApiClient.reconnect();
+        	}
+        }
+    }
+    @Override
     protected void onResume(){
         super.onResume();
-        if(mSignInClicked)
-    	mGoogleApiClient.connect();
+        if(mSignInClicked){
+        	if(!mGoogleApiClient.isConnected()){
+        		mGoogleApiClient.reconnect();
+        	}
+        }
     }
 
     @Override
@@ -870,16 +887,18 @@ public class OnlineActivity extends Activity
                     mpsad = MediaPlayer.create(this, R.raw.sad);
                 	mpsad.start();
                     showWarning(
+                          
                             "Complete!",
                             "This game is over; someone finished it, and so did you!  There is nothing to be done.");
+                    mTurnData = ChopsticksTurn.unpersist(mMatch.getData());
+            		setGameplayUI();
                     for(ImageView views:hands){
     	        		views.setOnTouchListener(null);
                     }
-                    findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
-                    findViewById(R.id.screen_game).setVisibility(View.GONE);
+                    
                     if(mpsad!=null)
                     mpsad.stop();
-                    break;
+                    return;
                 }
 
                 // Note that in this state, you must still call "Finish" yourself,
@@ -888,7 +907,12 @@ public class OnlineActivity extends Activity
                         "This game is over; someone finished it!  You can only finish it now.");
                
                 
-               
+                mTurnData = ChopsticksTurn.unpersist(mMatch.getData());
+        		setGameplayUI();
+                for(ImageView views:hands){
+	        		views.setOnTouchListener(null);
+                }
+                onFinish();
                 
                 findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
                 findViewById(R.id.screen_game).setVisibility(View.GONE);
