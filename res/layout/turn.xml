@@ -16,6 +16,7 @@
 -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
      xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,7 +25,7 @@
 
 
     <!-- SIGN-IN SCREEN -->
-    <LinearLayout android:id="@+id/screen_sign_in" style="@style/LLScreen">
+    <LinearLayout android:id="@+id/screen_sign_in" style="@style/LLScreen" android:background="@drawable/gradient">
         <TextView style="@style/GameName" />
         <TextView style="@style/GameBlurb" android:gravity="center" />
  		
@@ -37,13 +38,28 @@
         <Button android:id="@+id/button_single_player"
             style="@style/MainScreenButton"
             android:text="@string/single_player" />
-        
+        <com.facebook.login.widget.LoginButton
+    android:id="@+id/connectWithFbButton"
+    android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+    android:layout_marginTop="40dp"
+    style="@style/FacebookLoginButton"
+     android:paddingTop="11dp"
+     android:onClick="onFaceBookClicked"
+     android:background="@drawable/layout_bg"
+     
+        android:paddingBottom="11dp"
+    android:text="  connect_with_facebook" />
         <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
+            android:text="@string/signin_button"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
             style="@style/SignInButton" />
+       
     </LinearLayout>
 
     <!-- MAIN SCREEN -->
-    <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen" >
+    <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen" android:background="@drawable/gradient" >
       <!--    <TextView
                 android:id="@+id/name_field"
                 android:layout_width="wrap_content"

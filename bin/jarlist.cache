@@ -1,3 +1,13 @@
 # cache for current jar dependency. DO NOT EDIT.
 # format is <lastModified> <length> <SHA-1> <path>
 # Encoding is UTF-8
+1469547301754 19113 bdbfbed86ac095461c12c8e35c72ad72421eee56 C:\Users\Michael\Downloads\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\cardview\libs\android-support-v7-cardview.jar
+1473620494997 19113 bdbfbed86ac095461c12c8e35c72ad72421eee56 C:\Users\Michael\Downloads\facebook-android-sdk-4.0.1\facebook-android-sdk-4.0.1\facebook\libs\android-support-v7-cardview.jar
+1473619701778 46476 91c20388c9a45f62b5ed8fe0502bb76ff6251fc7 C:\Users\Michael\Downloads\chopstick-actual--master\chopstick-actual--master\libs\bolts-android-1.1.2.jar
+1473619701778 46476 91c20388c9a45f62b5ed8fe0502bb76ff6251fc7 C:\Users\Michael\Downloads\facebook-android-sdk-4.0.1\facebook-android-sdk-4.0.1\facebook\libs\bolts-android-1.1.2.jar
+1469547301519 1422188 1dc1f63cee098b27db60b9a2833fd7ca58f89636 C:\Users\Michael\Downloads\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\appcompat\libs\android-support-v4.jar
+1473620486877 1422188 1dc1f63cee098b27db60b9a2833fd7ca58f89636 C:\Users\Michael\Downloads\facebook-android-sdk-4.0.1\facebook-android-sdk-4.0.1\facebook\libs\android-support-v4.jar
+1473620484665 657138 6c2e7717a6b70dd702de6f8df474b4458f6a16aa C:\Users\Michael\Downloads\facebook-android-sdk-4.0.1\facebook-android-sdk-4.0.1\facebook\libs\android-support-v7-appcompat.jar
+1469547301457 657138 6c2e7717a6b70dd702de6f8df474b4458f6a16aa C:\Users\Michael\Downloads\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\android\support\v7\appcompat\libs\android-support-v7-appcompat.jar
+1473622247379 166 fb702fc8c51a638e2a3cee0543072a849b0999cf C:\Users\Michael\Downloads\facebook-android-sdk-4.0.1\facebook-android-sdk-4.0.1\facebook\libs\boltsactivity.jar
+1473622247379 166 fb702fc8c51a638e2a3cee0543072a849b0999cf C:\Users\Michael\Downloads\chopstick-actual--master\chopstick-actual--master\libs\boltsactivity.jar

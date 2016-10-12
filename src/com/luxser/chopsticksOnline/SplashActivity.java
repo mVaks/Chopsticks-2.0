@@ -31,10 +31,10 @@ public class SplashActivity extends Activity {
    
    setContentView(R.layout.splashscreen);
    
-   imageView = (ImageView)findViewById(R.id.imageView1);
-   imageView.setBackgroundResource(R.drawable.movie);
-   AnimationDrawable anim = (AnimationDrawable) imageView.getBackground();
-   anim.start();
+//   imageView = (ImageView)findViewById(R.id.imageView1);
+//   imageView.setBackgroundResource(R.drawable.movie);
+//   AnimationDrawable anim = (AnimationDrawable) imageView.getBackground();
+//   anim.start();
 
    new Handler().postDelayed(new Runnable() {
      

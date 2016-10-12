@@ -37,7 +37,7 @@
     </style>
 
     <style name="ButtonBarButton" />
-<color name="AccentColor">#cc0000</color>
+<color name="AccentColor">#a82d3c</color>
     <color name="PopupColor">@color/AccentColor</color>
     <color name="PopupTextColor">#ffffff</color>
     <color name="ButtonTextColor">#ffffff</color>
@@ -106,7 +106,7 @@
     <style name="Blurb">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/BlurbColor</item>
+        <item name="android:textColor">@color/ButtonTextColor</item>
     </style>
 
     <style name="GameBlurb" parent="@style/Blurb">
@@ -115,10 +115,21 @@
     </style>
 
     <style name="SignInButton">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">40dp</item>
+           
+            
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:text">@string/signin_button</item>
+            <item name="android:layout_gravity">center_horizontal</item>
     </style>
+    <style name="FacebookLoginButton">
+         <item name="android:layout_marginRight">14dp</item>
+                        <item name="android:layout_marginLeft">14dp</item>
+    <item name="android:layout_marginTop">10dp</item>
+    <item name="android:layout_marginBottom">10dp</item>
+    <item name="android:layout_gravity">center_horizontal</item>
+</style>
 
     <style name="GameButton">
         <item name="android:layout_width">wrap_content</item>

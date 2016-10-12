@@ -1,5 +1,7 @@
 package com.luxser.chopsticksOnline;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -7,12 +9,19 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.provider.Settings.Global;
+import android.util.Base64;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -28,10 +37,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
@@ -153,6 +169,12 @@ public class OnlineActivity extends Activity
 	  private Handler mHandler;       // Handler to display the ad on the UI thread
 	  private Runnable displayAd;     // Code to execute to perform this operation
 	 private InterstitialAd interstitial;
+	 private LoginButton loginButton;
+	 private CallbackManager callbackManager;
+	    private FacebookCallback<LoginResult> mFacebookCallback;
+
+	private void activateFb(){
+	}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,8 +187,49 @@ public class OnlineActivity extends Activity
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		 FacebookSdk.sdkInitialize(getApplicationContext());
+	        AppEventsLogger.activateApp(this);
+
         setContentView(R.layout.turn);
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton)findViewById(R.id.connectWithFbButton);
+        com.google.android.gms.common.SignInButton google = (com.google.android.gms.common.SignInButton)findViewById(R.id.button_sign_in);
+        setGooglePlusButtonText(google, getString(R.string.signin_button));
+        
+//      //init callbacks
+//        mFacebookCallback = new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Log.v("LoginActivity login", loginResult.toString());
+//                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+//                    @Override
+//                    public void onCompleted(JSONObject object, GraphResponse response) {
+//                        // Application code
+//                        Log.v("LoginActivity", response.toString());
+//                        try {
+//                            String email = object.getString("email");
+//                            Log.v("LoginActivity", "obtained email: ");
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                request.executeAsync();
+//            }
+//            @Override
+//            public void onCancel() {
+//                Log.e("LoginActivity", "facebook login canceled");
+//            }
+//
+//            @Override
+//            public void onError(FacebookException e) {
+//                Log.e("LoginActivity", "facebook login failed error");
+//            }
+//        };
+
+            
         assignVars();
+        
         // Create the Google API Client with access to Plus and Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -193,6 +256,7 @@ public class OnlineActivity extends Activity
           public void run() {  
             runOnUiThread(new Runnable() { 
               public void run() { 
+            	  
                 if (adView.isLoaded()) {
                   adView.show();
                 }
@@ -207,7 +271,19 @@ public class OnlineActivity extends Activity
 
         //mDataView = ((TextView) findViewById(R.id.data_view));
         //mTurnTextView = ((TextView) findViewById(R.id.turn_counter_view));
-        
+        handler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+            	if(LoginButton.clicked){
+          		  LoginButton.clicked = false;
+        			Toast.makeText(getApplicationContext(), "Facebook login coming soon...", Toast.LENGTH_SHORT).show();
+          	  	}
+                handler.postDelayed(this, 200);
+            }
+        };
+
+        handler.postDelayed(r, 200);
     }
 
     public void onAdClosed() {
@@ -377,6 +453,25 @@ public class OnlineActivity extends Activity
 //        startActivityForResult(intent, RC_SELECT_PLAYERS);
 //    }
 //
+    public void onFaceBookClicked(View view) {
+
+        //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends")); 
+    	 // Add code to print out the key hash
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.luxser.chopsticksOnline", 
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                }
+        } catch (NameNotFoundException e) {
+            
+        } catch (NoSuchAlgorithmException e) {
+            
+        }
+    }
 //    // Create a one-on-one automatch game.
 //    public void onQuickMatchClicked(View view) {
 //
@@ -492,7 +587,7 @@ public class OnlineActivity extends Activity
     public void setViewVisibility() {
     	
     	
-	
+    	dismissSpinner();
     	cMatch = mMatch;
         boolean isSignedIn = (mGoogleApiClient != null) && (mGoogleApiClient.isConnected());
 
@@ -693,6 +788,7 @@ public class OnlineActivity extends Activity
     public void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
         //just returned from displaying the leaderboard
+        //callbackManager.onActivityResult(request, response, data);
         if(request==1337)
             {
         	findViewById(R.id.screen_main).setVisibility(View.VISIBLE);
@@ -1299,12 +1395,11 @@ public class OnlineActivity extends Activity
             	tutorialDialog(tutorialTitle + tutorialPage, getString(R.string.tutorial_one));
             	break;
           
-            	
-            	
              }
 
              
     }
+   
     private String tutorialTitle;
     private int tutorialPage;
 public void tutorialDialog(String title, String message){
@@ -3021,19 +3116,33 @@ public void tutorialDialog(String title, String message){
 	    }
 	}
    public void onDestroy() {
-		if(mpclap!=null){
-	       	mpclap.stop();
-	       	mpclap.release();
-	       	}
-	       	if(mpsad!=null){
-	       		mpsad.stop();
-	       		mpsad.release();
-	       	}
-	        
-	       mpclap = null;
-	       mpsad = null;
-	   super.onDestroy();
+       super.onDestroy();
+       exitPlayer();
 	  
        
 	 }
+   private void exitPlayer() {
+       if(mpclap!=null && mpclap.isPlaying()){
+       mpclap.stop();
+       mpclap = null;
+       }
+       if(mpsad!= null && mpsad.isPlaying()){
+       mpsad.stop();
+       mpsad = null;
+       }
+       
+        }
+   protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+	    for (int i = 0; i < signInButton.getChildCount(); i++) {
+	        View v = signInButton.getChildAt(i);
+	        if (v instanceof TextView) {
+	            TextView mTextView = (TextView) v;
+	            mTextView.setText(buttonText);
+	            return;
+	        }
+	    }
+	}
+
 }
+	
+   

@@ -202,12 +202,16 @@ public class MainActivity extends Activity {
         	    if(ifBottomWon()){
         	    	bottomYT.setText("You Won");
 		        	topYT.setText("You Lost");
+		        	if((int)(((Math.random()*4)+1)) == 1)
+	 		        displayInterstitial();
 		        	 askForRematch();
 		        	 return;
         	    }
         	    if(ifTopWon()){
         	    	bottomYT.setText("You Lost");
 		        	topYT.setText("You Won");
+		        	if((int)(((Math.random()*4)+1)) == 1)
+	 		        	displayInterstitial();
 		        	 askForRematch();
 		        	 return;
         	    }

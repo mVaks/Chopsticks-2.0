@@ -262,6 +262,8 @@ public class SinglePlayerActivity extends Activity {
  		        	//topYT.setText("You Lost");
  		        	reCreateMedia();
  		        	mpclap.start();
+ 		    		if((int)(((Math.random()*4)+1)) == 1)
+ 		        	displayInterstitial();
  		        	askForRematch();
  		        	return;
          	    }
@@ -272,6 +274,8 @@ public class SinglePlayerActivity extends Activity {
  		        	//topYT.setText("You Won");
  		        	reCreateMedia();
  		        	mpsad.start();
+ 		        	if((int)(((Math.random()*4)+1)) == 1)
+ 		        	displayInterstitial();
  		        	askForRematch();
  		        	return;
          	    }
@@ -1578,7 +1582,44 @@ public void reCreateMedia(){
      
     }
 
-   
+   public void aiMoveFixed(){
+	   int sum1 = returnNumericalTopRightZero();
+		int sum2 = returnNumericalTopLeftZero();
+		int sum3 = returnNumericalBottomRightZero();
+		int sum4 = returnNumericalBottomLeftZero();
+   	while(!isBottomTurn && !aiJustWent){
+   	
+   	
+   		
+   		if(ifBottomWon()){
+   			bottomYT.setVisibility(View.VISIBLE);
+   			////topYT.setVisibility(View.VISIBLE);
+ 	    	bottomYT.setText("You Won");
+	        	////topYT.setText("You Lost");
+	        	onPause();
+	        	return;
+   		}
+   		if(ifTopWon()){
+   			bottomYT.setVisibility(View.VISIBLE);
+   			//topYT.setVisibility(View.VISIBLE);
+   			bottomYT.setText("You Lost");
+   			//topYT.setText("You Won");
+   			onPause();
+   			return;
+   		}
+   		View topLeft = findVisibilityTopLeft();
+   		View topRight = findVisibilityTopRight();
+   		View bottomLeft = findVisibilityBottomLeft();
+   		View bottomRight = findVisibilityBottomRight();
+   		int sumTopRight = returnNumericalTopRightZero();
+   		int sumTopLeft = returnNumericalTopLeftZero();
+   		int sumBottomRight = returnNumericalBottomRightZero();
+   		int sumBottomLeft = returnNumericalBottomLeftZero();
+   		//can win do it fam
+   		
+   		
+   	}
+   }
     
     public void aiMove(){
     	int sum1 = returnNumericalTopRightZero();
@@ -1819,7 +1860,59 @@ public void reCreateMedia(){
     			else
     				x=6;
     		}
-    		
+    		else if(returnNumericalBottomRight() == 0 && ((returnNumericalBottomLeft()+returnNumericalTopRight())>4 || (returnNumericalBottomLeft()+returnNumericalTopLeft())>4)){
+	   			if((returnNumericalBottomLeft()+returnNumericalTopRight())>4)
+	   				x=2;
+	   			else
+	   				x=3;
+	   		}
+	   		//can win do it fam
+	   		else if(returnNumericalBottomLeft() == 0 && ((returnNumericalBottomRight()+returnNumericalTopRight())>4 || (returnNumericalBottomRight()+returnNumericalTopLeft())>4)){
+	   			if((returnNumericalBottomRight()+returnNumericalTopRight())>4)
+	   			x=1;
+	   			else
+	   			x=4;
+	   		}
+	   		//if only one finger
+	   		else if(((returnNumericalTopRight() == 1) && (returnNumericalTopLeft() == 0)) || ((returnNumericalTopRight() == 0) && (returnNumericalTopLeft() == 1))){
+	   			if(((returnNumericalTopRight() == 1) && (returnNumericalTopLeft() == 0))){
+	   				//check which is less
+	   				if(returnNumericalBottomRight() > returnNumericalBottomLeft())
+	   					x=2;
+	   				else
+	   					x=1;
+	   			}
+	   			else{
+	   			//check which is less
+	   				if(returnNumericalBottomRight() > returnNumericalBottomLeft())
+	   					x=3;
+	   				else
+	   					x=4;
+	   			}
+	   		}
+	   		//if you are about to lose, don't and swap
+	   		else if((returnNumericalTopRight() == 0 || returnNumericalTopLeft() == 0)){
+	   			if(returnNumericalTopRight() == 0)
+	   				x=6;
+	   			else
+	   				x=5;
+	   		}
+	   		else if(returnNumericalTopRight()+returnNumericalBottomRight() > 4){
+	   			x=1;
+	   		}
+	   		else if(returnNumericalTopRight()+returnNumericalBottomLeft() > 4){
+	   			x=2;
+	   		}
+	   		else if(returnNumericalTopLeft()+returnNumericalBottomLeft() > 4){
+	   			x=3;
+	   		}
+	   		else if(returnNumericalTopLeft()+returnNumericalBottomRight() > 4){
+	   			x=4;
+	   		}
+	   		else if(returnNumericalTopRight() == 1 && returnNumericalTopLeft() == 1){
+	   			x=6;
+	   		}
+			
     		else if((returnNumericalBottomLeft()>=(Math.abs(5-returnNumericalTopRight() + returnNumericalTopLeft())) || returnNumericalBottomRight()>=(Math.abs(5-returnNumericalTopRight() + returnNumericalTopLeft())))){
     			int y = (int)(((Math.random()*5)+1));
     			if (y == 1)
@@ -2219,23 +2312,21 @@ public boolean changedState(int tR,int tL,int bR, int bL){
 	    public void displayInterstitial() {
 	      mHandler.postDelayed(displayAd, 1);
 	    }
-	    
 	    public void onDestroy() {
-	    	if(mpclap!= null && mpclap.isPlaying() == true){
-    	       	mpclap.stop();
-    	       	mpclap.release();
-    	       	}
-    	       	if(mpsad!= null && mpsad.isPlaying() == true){
-    	       		
-    	       		mpsad.stop();
-    	       		mpsad.release();
-    	       	}
-    	       	mpclap = null;
-    	       	mpsad = null;
-	    	   super.onDestroy();
-	    	 	
-	    	       	
-	    	 }
+	        super.onDestroy();
+	        exitPlayer();
+	 	  
+	        
+	 	 }
+	    private void exitPlayer() {
+	        if(mpclap!=null && mpclap.isPlaying()){
+	        mpclap.stop();
+	        mpclap = null;
+	        }
+	        if(mpsad!=null && mpsad.isPlaying()){
+	        mpsad.stop();
+	        }
+	         }
 
 	    
 	    @Override
